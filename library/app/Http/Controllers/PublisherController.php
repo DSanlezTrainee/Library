@@ -12,7 +12,8 @@ class PublisherController extends Controller
      */
     public function index()
     {
-        //
+        $publishers = Publisher::orderBy('name', 'asc')->simplePaginate(10);
+        return view('publishers.index', ['publishers' => $publishers]);
     }
 
     /**
@@ -36,7 +37,8 @@ class PublisherController extends Controller
      */
     public function show(Publisher $publisher)
     {
-        //
+        $publisher = Publisher::findOrFail($publisher->id);
+        return view('publishers.show', ['publisher' => $publisher]);
     }
 
     /**
