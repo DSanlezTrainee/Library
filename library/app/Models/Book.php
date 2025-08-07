@@ -44,4 +44,12 @@ class Book extends Model
     {
         return $this->belongsTo(Publisher::class);
     }
+
+    /**
+     * Get the formatted price attribute.
+     */
+    public function getFormattedPriceAttribute()
+    {
+        return $this->price ? (float) $this->price : 0;
+    }
 }

@@ -14,17 +14,105 @@
         </button>
     </div>
 
-    <table class="table-auto w-full border-collapse border border-gray-300">
+    <table class="table-fixed w-full border-collapse border border-gray-300">
+        <colgroup>
+            <col style="width: 20%;">
+            <col style="width: 14%;">
+            <col style="width: 15%;">
+            <col style="width: 10%;">
+            <col style="width: 12%;">
+            <col style="width: 11%;">
+            <col style="width: 13%;">
+        </colgroup>
         <thead>
             <tr>
-                <th class="border border-gray-300 px-4 py-2 w-1/5">Name</th>
-                <th class="border border-gray-300 px-4 py-2 w-1/6">Author</th>
-                <th class="border border-gray-300 px-4 py-2 w-1/8">Publisher</th>
-                <th class="border border-gray-300 px-4 py-2 w-1/12">Price</th>
-                <th class="border border-gray-300 px-4 py-2 w-1/8">ISBN</th>
-                <th class="border border-gray-300 px-4 py-2 w-1/8">Cover Image</th>
-                <th class="border border-gray-300 px-4 py-2 w-1/8">Bibliography</th>
-
+                <th class="border border-gray-300 px-4 py-2">
+                    <button wire:click="sortBy('name')"
+                        class="flex items-center justify-between w-full hover:bg-gray-100 px-2 py-1 rounded min-h-[2rem]">
+                        <span>Name</span>
+                        <span class="ml-2 text-xs">
+                            @if($sortField === 'name')
+                            @if($sortDirection === 'asc')
+                            ↑
+                            @else
+                            ↓
+                            @endif
+                            @else
+                            ↕
+                            @endif
+                        </span>
+                    </button>
+                </th>
+                <th class="border border-gray-300 px-4 py-2">
+                    <button wire:click="sortBy('author')"
+                        class="flex items-center justify-between w-full hover:bg-gray-100 px-2 py-1 rounded min-h-[2rem]">
+                        <span>Author</span>
+                        <span class="ml-2 text-xs">
+                            @if($sortField === 'author')
+                            @if($sortDirection === 'asc')
+                            ↑
+                            @else
+                            ↓
+                            @endif
+                            @else
+                            ↕
+                            @endif
+                        </span>
+                    </button>
+                </th>
+                <th class="border border-gray-300 px-4 py-2">
+                    <button wire:click="sortBy('publisher')"
+                        class="flex items-center justify-between w-full hover:bg-gray-100 px-2 py-1 rounded min-h-[2rem]">
+                        <span>Publisher</span>
+                        <span class="ml-2 text-xs">
+                            @if($sortField === 'publisher')
+                            @if($sortDirection === 'asc')
+                            ↑
+                            @else
+                            ↓
+                            @endif
+                            @else
+                            ↕
+                            @endif
+                        </span>
+                    </button>
+                </th>
+                <th class="border border-gray-300 px-4 py-2">
+                    <button wire:click="sortBy('price')"
+                        class="flex items-center justify-between w-full hover:bg-gray-100 px-2 py-1 rounded min-h-[2rem]">
+                        <span>Price</span>
+                        <span class="ml-2 text-xs">
+                            @if($sortField === 'price')
+                            @if($sortDirection === 'asc')
+                            ↑
+                            @else
+                            ↓
+                            @endif
+                            @else
+                            ↕
+                            @endif
+                        </span>
+                    </button>
+                </th>
+                <th class="border border-gray-300 px-4 py-2">
+                    <button wire:click="sortBy('isbn')"
+                        class="flex items-center justify-between w-full hover:bg-gray-100 px-2 py-1 rounded min-h-[2rem]">
+                        <span>ISBN</span>
+                        <span class="ml-2 text-xs">
+                            @if($sortField === 'isbn')
+                            @if($sortDirection === 'asc')
+                            ↑
+                            @else
+                            ↓
+                            @endif
+                            @else
+                            ↕
+                            @endif
+                        </span>
+                    </button>
+                </th>
+                <th class="border border-gray-300 px-4 py-2">Cover Image</th>
+                <th class="border border-gray-300 px-4 py-2">Bibliography</th>
             </tr>
         </thead>
         <tbody>
@@ -38,7 +126,7 @@
                     ${{ number_format($book->formatted_price, 2) }}
                 </td>
                 <td class="border border-gray-300 px-4 py-2">{{ $book->isbn }}</td>
-                <td class="border border-gray-300 px-4 py-2">
+                <td class="border border-gray-300 px-4 py-2 flex justify-center">
                     <img src="{{ $book->cover_image }}" alt="Cover Image" class="w-16 h-20 object-cover rounded">
                 </td>
                 <td class="border border-gray-300 px-4 py-2 text-center">
@@ -48,7 +136,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="3" class="text-center py-4">No books found.</td>
+                <td colspan="7" class="text-center py-4">No books found.</td>
             </tr>
             @endforelse
         </tbody>
