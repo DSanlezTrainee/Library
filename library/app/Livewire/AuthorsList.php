@@ -4,22 +4,44 @@ namespace App\Livewire;
 
 use App\Models\Author;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class AuthorsList extends Component
 {
+    use WithPagination;
+
+    public $search = '';
+    public $sortField = 'name';
+    public $sortDirection = 'asc';
+
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+
+        $this->resetPage();
+    }
+
     public function render()
     {
-        // Fetch authors filtered by search, paginate 10 per page (optional)
+        // Buscar todos os autores
         if (!empty($this->search)) {
-            // Para dados cifrados, usamos busca especial (menos eficiente)
             $authorsCollection = Author::whereLikeEncrypted('name', $this->search);
-            $sortedCollection = $authorsCollection->sortBy('name');
-
-            // Converter para paginação compatível com links()
-            $authors = Author::paginateCollection($sortedCollection, 10);
         } else {
-            $authors = Author::orderBy('name')->paginate(10);
+            $authorsCollection = Author::all();
         }
+
+        // Ordenar dinamicamente pelo campo e direção escolhidos
+        $sortedCollection = $authorsCollection->sortBy(function ($author) {
+            return $author->{$this->sortField} ?? '';
+        }, SORT_NATURAL | SORT_FLAG_CASE, $this->sortDirection === 'desc');
+
+        // Paginar manualmente
+        $authors = Author::paginateCollection($sortedCollection, 10);
 
         return view('livewire.authors-list', [
             'authors' => $authors,
