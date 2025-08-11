@@ -53,17 +53,22 @@
     <div class="flex justify-between items-center mb-4">
         <div class="flex gap-2 items-center">
 
-            <div class="dropdown" id="filterDropdown">
-                <div role="button" class="btn m-1 min-w-[120px]" onclick="toggleDropdown()">
+            <div x-data="{ open: false }" class="relative" id="filterDropdown">
+                <div @click="open = !open" role="button" class="btn m-1 min-w-[120px]">
                     {{ ucfirst($searchFieldLabel ?? 'Filters') }}
                 </div>
-                <ul
-                    class="dropdown-content menu absolute bg-white dark:bg-gray-800 rounded-box shadow-lg z-50 w-52 p-2 hidden">
-                    <li><a wire:click.prevent="$set('searchField', 'all')">All</a></li>
-                    <li><a wire:click.prevent="$set('searchField', 'name')">Book Name</a></li>
-                    <li><a wire:click.prevent="$set('searchField', 'publisher')">Publisher</a></li>
-                    <li><a wire:click.prevent="$set('searchField', 'author')">Author</a></li>
-                    <li><a wire:click.prevent="$set('searchField', 'isbn')">ISBN</a></li>
+                <ul x-show="open" @click.away="open = false"
+                    class="absolute left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 rounded shadow-lg z-50 w-52 py-1">
+                    <li><a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            wire:click.prevent="$set('searchField', 'all'); open = false">All</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            wire:click.prevent="$set('searchField', 'name'); open = false">Book Name</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            wire:click.prevent="$set('searchField', 'publisher'); open = false">Publisher</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            wire:click.prevent="$set('searchField', 'author'); open = false">Author</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            wire:click.prevent="$set('searchField', 'isbn'); open = false">ISBN</a></li>
                 </ul>
             </div>
 
@@ -227,31 +232,26 @@
         {{ $books->links('pagination::tailwind') }}
     </div>
 
-    <script>
-        function toggleDropdown() {
-            document.querySelector('#filterDropdown ul').classList.toggle('hidden');
-        }
-    </script>
+    <!-- Dropdown functionality is now handled by Alpine.js -->
     <!-- Replace your existing modal implementation with this: -->
     <div id="deleteConfirmationModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
         <div class="fixed inset-0 bg-black opacity-50" id="modalBackdrop"></div>
         <div class="bg-white dark:bg-gray-800 rounded-lg p-6 z-10 w-full max-w-md mx-4">
-            <h3 class="font-bold text-lg mb-4">Confirmar Exclusão</h3>
+            <h3 class="font-bold text-lg mb-4">Confirm</h3>
             <p class="py-4">Do you really want to delete this book?</p>
             <div class="flex justify-end gap-3 mt-4">
-                <button id="btnCancel" class="btn btn-secondary">No</button>
+                <button id="btnCancel" type="button" class="bg-red-600 hover:bg-red-700 text-white  py-2 px-4 rounded">No</button>
                 <form id="delete-form" method="POST" action="">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Yes</button>
+                    <button type="submit" class="btn btn-success">Yes</button>
                 </form>
             </div>
         </div>
     </div>
 
     <script>
-       
-    // Função para abrir modal
+        // Função para abrir modal
     function openModal() {
         const modal = document.getElementById('deleteConfirmationModal');
         const body = document.querySelector('body');

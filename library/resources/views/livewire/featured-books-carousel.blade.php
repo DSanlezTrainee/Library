@@ -1,23 +1,29 @@
 <style>
     /* Garantir que os botões do carrossel sejam visíveis */
     .fixed-button {
-        display: flex !important;
+        display: flex;
         align-items: center;
         justify-content: center;
         width: 48px;
         height: 48px;
-        opacity: 0.9;
+        opacity: 0.8;
+        border: 2px solid rgba(255, 255, 255, 0.4);
     }
 
     .fixed-button:hover {
         opacity: 1;
-        transform: translateY(-50%) scale(1.1);
+        transform: scale(1.1);
+        border: 2px solid rgba(255, 255, 255, 0.8);
     }
 
     /* Estilos para o carrossel com transições laterais */
     .carousel-container {
-        height: 600px;
-        /* or any fixed height */
+        height: 480px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        border-radius: 1rem;
+        background: linear-gradient(145deg, #f8fafc, #ffffff);
+        overflow: hidden;
+        position: relative;
     }
 
     .carousel-slide {
@@ -27,9 +33,10 @@
         transition: transform 0.7s ease-in-out;
         opacity: 0;
         visibility: hidden;
-        overflow-y: auto;
-        padding: 1rem;
         box-sizing: border-box;
+        background: linear-gradient(to right, #f8f8f8, #ffffff);
+        display: flex;
+        align-items: center;
     }
 
     .carousel-slide.active {
@@ -74,7 +81,7 @@
     }
 </style>
 
-<div class="w-full max-w-2xl mx-auto py-8">
+<div class="w-full max-w-3xl mx-auto py-8">
     <!-- Carrossel com abordagem direta -->
     <div x-data="{
         books: {{ json_encode($books) }},
@@ -100,16 +107,17 @@
             }
         }
     }"
-        class="relative overflow-hidden rounded-lg shadow-lg min-h-[500px] bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 carousel-container">
+        class="relative overflow-hidden rounded-lg shadow-lg min-h-[400px] bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 carousel-container">
 
         <!-- Mensagem se não houver livros -->
         <div x-show="!books || books.length === 0" class="flex flex-col items-center justify-center p-6">
-            <p class="text-red-500">Nenhum livro para mostrar</p>
+            <p class="text-red-500">No books</p>
         </div>
 
-        <!-- Debug do livro atual -->
-        <div class="absolute top-2 right-2 bg-black/70 text-white px-3 py-1 rounded-full text-xs z-40">
-            <span x-text="'Livro ' + (current + 1) + ' de ' + books.length"></span>
+        <!-- Indicador do livro atual -->
+        <div
+            class="absolute top-3 right-3 bg-gradient-to-r from-white-500 to-blue-700 text-black px-4 py-1 rounded-full text-xs font-medium z-40 shadow-md">
+            <span x-text="'Book ' + (current + 1) + ' de ' + books.length"></span>
         </div>
 
         <!-- Layout do carrossel com navegação -->
@@ -117,30 +125,40 @@
             <!-- Botão anterior embutido -->
             <div class="px-2 z-10">
                 <button @click="prev"
-                    class="bg-blue-600 text-black hover:bg-blue-700 rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-200 focus:outline-none">
+                    class="fixed-button bg-white text-blue-600 hover:bg-blue-600 hover:text-white rounded-full p-3 shadow-lg transition-all duration-300 focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
                     </svg>
                 </button>
             </div>
 
             <!-- Conteúdo do livro -->
-            <div class="flex-1 px-2 relative h-full">
+            <div class="flex-1 px-4 relative h-full">
                 <template x-for="(book, idx) in books" :key="idx">
                     <div :class="getSlideClass(idx)"
-                        class="flex md:flex-row flex-col items-center md:items-start justify-center p-4 h-full overflow-auto">
-                        <div class="md:w-1/3 flex justify-center mb-6 md:mb-0">
-                            <img :src="book.cover_image" alt="Capa do livro"
-                                class="w-40 h-56 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                        class="flex md:flex-row flex-col items-start justify-between p-6 h-full">
+                        <div class="md:w-1/3 flex justify-center items-start mb-6 md:mb-0">
+                            <img :src="book.cover_image" :alt="'Capa do livro ' + book.name"
+                                class="w-48 h-64 object-cover rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-gray-100">
                         </div>
-                        <div class="md:w-2/3 md:pl-8 overflow-y-auto max-h-[400px]">
-                            <h2 class="text-xl font-bold mb-2" x-text="book.name"></h2>
-                            <p class="text-gray-700 mb-3 text-sm leading-relaxed overflow-y-auto max-h-[250px] pr-2"
-                                x-text="book.bibliography"></p>
-                            <span
-                                class="inline-block bg-gray-200 px-3 py-1 rounded-full text-sm font-semibold text-gray-700"
-                                x-text="book.isbn"></span>
+                        <div class="md:w-2/3 md:pl-8 flex flex-col justify-start">
+                            <h2 class="text-2xl font-bold mb-2" x-text="book.name"></h2>
+                            <div class="flex flex-wrap gap-1 mb-3">
+                                <span class="text-black-600 font-medium" x-text="'By: ' + book.authors"></span>
+                                <span class="text-gray-500">•</span>
+                                <span class="text-gray-600" x-text="'Ed.: ' + book.publisher"></span>
+                            </div>
+
+                            <div class="max-h-40 overflow-y-auto mb-4 pr-2">
+                                <p class="text-gray-700 text-base leading-relaxed" x-text="book.bibliography"></p>
+                            </div>
+                            <div class="max-h-40 overflow-y-auto mb-4 pr-2">
+                                <span
+                                    class="inline-block bg-gray-200 px-3 py-1 rounded-full text-sm font-semibold text-gray-700"
+                                    x-text="'ISBN: ' + book.isbn"></span>
+                            </div>
+
                         </div>
                     </div>
                 </template>
@@ -149,7 +167,7 @@
             <!-- Botão próximo embutido -->
             <div class="px-2">
                 <button @click="next"
-                    class="bg-blue-600 text-black hover:bg-blue-700 rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-200 focus:outline-none">
+                    class="fixed-button bg-white text-blue-600 hover:bg-blue-600 hover:text-white rounded-full p-3 shadow-lg transition-all duration-200 focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -159,12 +177,12 @@
         </div>
 
         <!-- Indicadores de paginação -->
-        <div class="flex justify-center mt-6 space-x-3">
+        <div class="flex justify-center mt-4 space-x-3 absolute bottom-4 left-0 right-0">
             <template x-for="(_, idx) in books" :key="idx">
                 <button @click="current = idx" :class="{
-                    'bg-blue-500 scale-110': current === idx, 
-                    'bg-gray-300 hover:bg-gray-400': current !== idx
-                }" class="w-3 h-3 rounded-full transition-all duration-200 transform"></button>
+                    'bg-blue-600 w-4 h-4 scale-110': current === idx, 
+                    'bg-gray-300 hover:bg-gray-400 w-3 h-3': current !== idx
+                }" class="rounded-full transition-all duration-300 transform shadow"></button>
             </template>
         </div>
     </div>
