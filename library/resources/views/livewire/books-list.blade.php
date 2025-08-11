@@ -1,4 +1,55 @@
 <div>
+    @if (session()->has('success'))
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
+        class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 relative">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">Success!</p>
+                <p>{{ session('success') }}</p>
+            </div>
+            <button @click="show = false" class="absolute top-0 right-0 mt-4 mr-4 text-green-500 hover:text-green-700">
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </div>
+    @endif
+
+    @if (session()->has('error'))
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
+        class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 relative">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">Error!</p>
+                <p>{{ session('error') }}</p>
+            </div>
+            <button @click="show = false" class="absolute top-0 right-0 mt-4 mr-4 text-red-500 hover:text-red-700">
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </div>
+    @endif
+
     <div class="flex justify-between items-center mb-4">
         <div class="flex gap-2 items-center">
 
@@ -19,6 +70,9 @@
             <input type="text" wire:model.live="search" placeholder="Search books..."
                 class="input input-primary max-w-md" />
         </div>
+        <a href="{{ route('books.create') }}" class="btn btn-primary">
+            Add Book
+        </a>
         <button wire:click="export"
             class="btn btn-success flex items-center gap-2 hover:bg-green-600 transition-colors duration-200">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -40,6 +94,7 @@
                 <col style="width: 12%;">
                 <col style="width: 11%;">
                 <col style="width: 13%;">
+                <col style="width: 10%;">
             </colgroup>
             <thead>
                 <tr>
@@ -130,6 +185,7 @@
                     </th>
                     <th class="border border-gray-300 px-4 py-2">Cover Image</th>
                     <th class="border border-gray-300 px-4 py-2">Bibliography</th>
+                    <th class="border border-gray-300 px-4 py-2">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -150,6 +206,14 @@
                         <a href="/books/{{ $book->id }}" class="text-blue-500 text-align:center hover:underline">View
                             Bibliography</a>
                     </td>
+                    <td class="border border-gray-300 px-4 py-2 text-center">
+                        <a href="/books/{{ $book->id }}/edit" class="text-blue-500 hover:underline"> <img
+                                src="{{ asset('images/edit.png') }}" alt="Edit" class="w-5 h-5 inline mb-2"></a>
+                        <button type="button" class="text-red-500 hover:underline delete-book-btn"
+                            data-book-id="{{ $book->id }}">
+                            <img src="{{ asset('images/remove.png') }}" alt="Delete" class="w-5 h-5 inline">
+                        </button>
+                    </td>
                 </tr>
                 @empty
                 <tr>
@@ -160,7 +224,7 @@
         </table>
     </div>
     <div class="mt-4">
-        {{ $books->links() }}
+        {{ $books->links('pagination::tailwind') }}
     </div>
 
     <script>
@@ -168,4 +232,61 @@
             document.querySelector('#filterDropdown ul').classList.toggle('hidden');
         }
     </script>
+    <!-- Replace your existing modal implementation with this: -->
+    <div id="deleteConfirmationModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="fixed inset-0 bg-black opacity-50" id="modalBackdrop"></div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 z-10 w-full max-w-md mx-4">
+            <h3 class="font-bold text-lg mb-4">Confirmar Exclusão</h3>
+            <p class="py-4">Do you really want to delete this book?</p>
+            <div class="flex justify-end gap-3 mt-4">
+                <button id="btnCancel" class="btn btn-secondary">No</button>
+                <form id="delete-form" method="POST" action="">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       
+    // Função para abrir modal
+    function openModal() {
+        const modal = document.getElementById('deleteConfirmationModal');
+        const body = document.querySelector('body');
+        modal.classList.remove('hidden');
+        body.classList.add('overflow-hidden'); // Prevents scrolling when modal is open
+    }
+
+    // Função para fechar modal
+    function closeModal() {
+        const modal = document.getElementById('deleteConfirmationModal');
+        const body = document.querySelector('body');
+        modal.classList.add('hidden');
+        body.classList.remove('overflow-hidden');
+    }
+
+    // Fechar modal ao clicar no backdrop
+    document.getElementById('modalBackdrop').addEventListener('click', () => {
+        closeModal();
+    });
+
+    // Fechar modal ao clicar em "No"
+    document.getElementById('btnCancel').addEventListener('click', () => {
+        closeModal();
+    });
+
+    // Configura botões de delete para abrir modal e definir action
+    document.querySelectorAll('.delete-book-btn').forEach(button => {
+        button.addEventListener('click', event => {
+            event.preventDefault();
+            const bookId = button.dataset.bookId;
+            const form = document.getElementById('delete-form');
+            form.action = `/books/${bookId}`;
+            openModal();
+        });
+    });
+    </script>
+
 </div>

@@ -14,6 +14,9 @@ class BooksList extends Component
 {
     use WithPagination;
 
+    // Define o tema de paginação para Tailwind
+    protected $paginationTheme = 'tailwind';
+
     public $search = '';
     public $searchField = 'all';
     public $sortField = 'name';
@@ -53,6 +56,18 @@ class BooksList extends Component
         }
     }
 
+    // Resetar página quando a busca mudar
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    // Resetar página quando o campo de busca mudar
+    public function updatingSearchField()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         // Buscar todos os livros com relacionamentos necessários
@@ -65,7 +80,7 @@ class BooksList extends Component
         // Ordenar a coleção em PHP para todos os campos cifrados
         $booksCollection = $this->applySortingToCollection($booksCollection);
 
-        // Paginar manualmente
+        // Paginar manualmente usando o método atualizado que suporta Livewire
         $books = Book::paginateCollection($booksCollection, 10);
 
         return view('livewire.books-list', [

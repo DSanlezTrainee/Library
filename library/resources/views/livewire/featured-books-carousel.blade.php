@@ -16,8 +16,9 @@
 
     /* Estilos para o carrossel com transições laterais */
     .carousel-container {
-    height: 600px; /* or any fixed height */
-}
+        height: 600px;
+        /* or any fixed height */
+    }
 
     .carousel-slide {
         position: absolute;
@@ -41,14 +42,17 @@
     .overflow-y-auto::-webkit-scrollbar {
         width: 6px;
     }
+
     .overflow-y-auto::-webkit-scrollbar-track {
         background: #f1f1f1;
         border-radius: 10px;
     }
+
     .overflow-y-auto::-webkit-scrollbar-thumb {
         background: #888;
         border-radius: 10px;
     }
+
     .overflow-y-auto::-webkit-scrollbar-thumb:hover {
         background: #555;
     }
