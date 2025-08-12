@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-    @vite('resources/css/app.css')
+    @vite(['resources/css/app.css'])
     @livewireStyles
 </head>
 
@@ -27,6 +27,8 @@
                                 <x-nav-link href="/authors" :active="request()->is('authors')">Authors</x-nav-link>
                                 <x-nav-link href="/publishers" :active="request()->is('publishers')">Publishers
                                 </x-nav-link>
+                                <x-nav-link href="/requisitions" :active="request()->is('requisitions')">Requisitions
+                                </x-nav-link>
                             </div>
                         </div>
                     </div>
@@ -44,7 +46,7 @@
                                             <button
                                                 class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
                                                 <img class="size-8 rounded-full object-cover"
-                                                    src="{{ Auth::user()->profile_photo_url }}"
+                                                    src="{{ Auth::user()->getFreshProfilePhotoUrl() }}"
                                                     alt="{{ Auth::user()->name }}" />
                                             </button>
                                             @else
@@ -141,6 +143,7 @@
     <div class="h-14.5 hidden lg:block"></div>
     @endif
     @livewireScripts
+    <script src="{{ asset('js/profile-refresh.js') }}"></script>
 
 </body>
 

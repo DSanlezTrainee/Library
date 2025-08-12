@@ -13,7 +13,7 @@ class RequisitionController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('admin')) {
+        if ($user->isAdmin()) {
             // Admin vê todas as requisições
             $requisitions = Requisition::with('user', 'book')->latest()->paginate(15);
         } else {
@@ -79,7 +79,7 @@ class RequisitionController extends Controller
 
         // Só pode ver o detalhe se for admin ou dono da requisição
         $user = Auth::user();
-        if (!$user->hasRole('admin') && $requisition->user_id !== $user->id) {
+        if (!$user->isAdmin() && $requisition->user_id !== $user->id) {
             abort(403);
         }
 

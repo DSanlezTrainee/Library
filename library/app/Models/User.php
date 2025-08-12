@@ -3,12 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
+use Laravel\Jetstream\HasProfilePhoto;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -85,5 +86,27 @@ class User extends Authenticatable
     public function requisitions()
     {
         return $this->hasMany(Requisition::class);
+    }
+
+    /**
+     * Get a fresh profile photo URL (not cached)
+     * This method rebuilds the URL directly to avoid any caching issues
+     */
+    public function getFreshProfilePhotoUrl()
+    {
+        if ($this->profile_photo_path) {
+            // Construir a URL manualmente sem usar o método url()
+            $url = '/storage/' . $this->profile_photo_path;
+
+            // Add cache-busting parameter
+            return $url . '?v=' . time() . rand(1000, 9999);
+        }
+
+        // If no custom photo, return the default avatar URL
+        $name = trim(collect(explode(' ', $this->name))->map(function ($segment) {
+            return mb_substr($segment, 0, 1);
+        })->join(' '));
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=7F9CF5&background=EBF4FF';
     }
 }
