@@ -73,6 +73,13 @@
                                                 {{ __('Profile') }}
                                             </x-dropdown-link>
 
+                                            @if(auth()->check() && auth()->user()->role === 'admin')
+                                            <x-dropdown-link class="text-white hover:bg-gray-700"
+                                                href="{{ route('admins.index') }}">
+                                                {{ __('Admins') }}
+                                            </x-dropdown-link>
+                                            @endif
+
                                             <x-dropdown-link class="text-white hover:bg-gray-700"
                                                 href="{{ route('dashboard') }}">
                                                 {{ __('Dashboard') }}

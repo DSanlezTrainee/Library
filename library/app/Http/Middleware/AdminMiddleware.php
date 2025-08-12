@@ -15,9 +15,16 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && $request->user()->isAdmin()) {
+        // Check if the user is authenticated first
+        if (!$request->user()) {
+            return redirect()->route('login');
+        }
+
+        // Then check if the user is an admin
+        if ($request->user()->isAdmin()) {
             return $next($request);
         }
+
         abort(403);
     }
 }
