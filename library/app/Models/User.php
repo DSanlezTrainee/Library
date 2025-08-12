@@ -81,4 +81,9 @@ class User extends Authenticatable
     {
         return $this->role === 'citizen';
     }
+
+    public function requisitions()
+    {
+        return $this->hasMany(Requisition::class);
+    }
 }

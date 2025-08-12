@@ -27,11 +27,11 @@ class Book extends Model
     protected function casts(): array
     {
         return [
-            'isbn' => Encrypted::class,        // Cifrar ISBN
-            'name' => Encrypted::class,        // Cifrar nome do livro
-            'bibliography' => Encrypted::class, // Cifrar bibliografia
-            'cover_image' => Encrypted::class, // Cifrar caminho da imagem
-            'price' => Encrypted::class,       // Cifrar preço
+            'isbn' => Encrypted::class,       
+            'name' => Encrypted::class,        
+            'bibliography' => Encrypted::class, 
+            'cover_image' => Encrypted::class, 
+            'price' => Encrypted::class,      
         ];
     }
 
@@ -51,5 +51,10 @@ class Book extends Model
     public function getFormattedPriceAttribute()
     {
         return $this->price ? (float) $this->price : 0;
+    }
+
+    public function requisitions()
+    {
+        return $this->hasMany(Requisition::class);
     }
 }

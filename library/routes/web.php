@@ -5,6 +5,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\RequisitionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +25,28 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::put('/admins/{admin}', [AdminController::class, 'update'])->name('admins.update');
     Route::get('/admins/{admin}', [AdminController::class, 'show'])->name('admins.show');
     Route::delete('/admins/{admin}', [AdminController::class, 'destroy'])->name('admins.destroy');
+});
+
+// Public routes
+
+Route::middleware(['auth'])->group(function () {
+
+    // Cidadãos e Admin podem acessar o menu requisições
+    Route::get('/requisitions', [RequisitionController::class, 'index'])->name('requisitions.index');
+
+    // Mostrar formulário para criar nova requisição
+    Route::get('/requisitions/create', [RequisitionController::class, 'create'])->name('requisitions.create');
+
+    // Armazenar nova requisição
+    Route::post('/requisitions', [RequisitionController::class, 'store'])->name('requisitions.store');
+
+    // Detalhe da requisição
+    Route::get('/requisitions/{requisition}', [RequisitionController::class, 'show'])->name('requisitions.show');
+
+    Route::middleware(['is_admin'])->group(function () {
+        Route::get('/requisitions/{requisition}/edit', [RequisitionController::class, 'edit'])->name('requisitions.edit');
+        Route::put('/requisitions/{requisition}', [RequisitionController::class, 'update'])->name('requisitions.update');
+    });
 });
 
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');

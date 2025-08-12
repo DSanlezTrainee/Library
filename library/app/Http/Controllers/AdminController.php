@@ -39,7 +39,7 @@ class AdminController extends Controller
 
         User::create([
             'name' => $request->name,
-            'email' => $request->email,
+            'email' => $request->email->unique(),
             'password' => bcrypt($request->password),
             'role' => 'admin',
         ]);
@@ -56,7 +56,7 @@ class AdminController extends Controller
         if ($admin->role !== 'admin') {
             return redirect('/')->with('error', 'User is not an admin.');
         }
-        
+
         return view('admins.show', compact('admin'));
     }
 
@@ -69,7 +69,7 @@ class AdminController extends Controller
         if ($admin->role !== 'admin') {
             return redirect()->route('admins.index')->with('error', 'User is not an admin.');
         }
-        
+
         return view('admins.edit', compact('admin'));
     }
 
@@ -82,30 +82,30 @@ class AdminController extends Controller
         if ($admin->role !== 'admin') {
             return redirect()->route('admins.index')->with('error', 'User is not an admin.');
         }
-        
+
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $admin->id,
         ];
-        
+
         // Only validate password if it's provided
         if ($request->filled('password')) {
             $rules['password'] = 'string|min:8|confirmed';
         }
-        
+
         $validated = $request->validate($rules);
-        
+
         // Update user details
         $admin->name = $validated['name'];
         $admin->email = $validated['email'];
-        
+
         // Only update password if provided
         if ($request->filled('password')) {
             $admin->password = bcrypt($validated['password']);
         }
-        
+
         $admin->save();
-        
+
         return redirect()->route('admins.index')->with('success', 'Admin updated successfully.');
     }
 
@@ -118,14 +118,14 @@ class AdminController extends Controller
         if ($admin->role !== 'admin') {
             return redirect()->route('admins.index')->with('error', 'User is not an admin.');
         }
-        
+
         // Prevent self-deletion
         if (Auth::check() && $admin->id === Auth::id()) {
             return redirect()->route('admins.index')->with('error', 'You cannot delete your own admin account.');
         }
-        
+
         $admin->delete();
-        
+
         return redirect()->route('admins.index')->with('success', 'Admin deleted successfully.');
     }
 }
