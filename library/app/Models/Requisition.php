@@ -10,6 +10,8 @@ class Requisition extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
+        'book_id',
         'sequential_number',
         'start_date',
         'end_date',

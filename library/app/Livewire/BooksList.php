@@ -7,6 +7,7 @@ use App\Models\Author;
 use Livewire\Component;
 use App\Exports\BooksExport;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -83,9 +84,19 @@ class BooksList extends Component
         // Paginar manualmente usando o método atualizado que suporta Livewire
         $books = Book::paginateCollection($booksCollection, 10);
 
+        // Calcular o número de requisições ativas do usuário
+        $userActiveRequisitionsCount = 0;
+        if (Auth::check()) {
+            $userActiveRequisitionsCount = Auth::user()
+                ->requisitions()
+                ->whereNull('actual_return_date')
+                ->count();
+        }
+
         return view('livewire.books-list', [
             'books' => $books,
             'searchFieldLabel' => $this->searchFieldLabel,
+            'userActiveRequisitionsCount' => $userActiveRequisitionsCount,
         ]);
     }
 

@@ -75,9 +75,11 @@
             <input type="text" wire:model.live="search" placeholder="Search books..."
                 class="input input-primary max-w-md" />
         </div>
+        @if(auth()->user() && auth()->user()->isAdmin())
         <a href="{{ route('books.create') }}" class="btn btn-primary">
             Add Book
         </a>
+        @endif
         <button wire:click="export"
             class="btn btn-success flex items-center gap-2 hover:bg-green-600 transition-colors duration-200">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -189,7 +191,7 @@
                         </button>
                     </th>
                     <th class="border border-gray-300 px-4 py-2">Cover Image</th>
-                    <th class="border border-gray-300 px-4 py-2">Bibliography</th>
+                    <th class="border border-gray-300 px-4 py-2">Details</th>
                     <th class="border border-gray-300 px-4 py-2">Actions</th>
                 </tr>
             </thead>
@@ -209,16 +211,35 @@
                     </td>
                     <td class="border border-gray-300 px-4 py-2 text-center">
                         <a href="/books/{{ $book->id }}" class="text-blue-500 text-align:center hover:underline">View
-                            Bibliography</a>
+                            Details</a>
                     </td>
+
                     <td class="border border-gray-300 px-4 py-2 text-center">
-                        <a href="/books/{{ $book->id }}/edit" class="text-blue-500 hover:underline"> <img
-                                src="{{ asset('images/edit.png') }}" alt="Edit" class="w-5 h-5 inline mb-2"></a>
+
+                        @if(auth()->user() && auth()->user()->isAdmin())
+                        <!-- Botões de admin -->
+                        <a href="/books/{{ $book->id }}/edit" class="text-blue-500 hover:underline">
+                            <img src="{{ asset('images/edit.png') }}" alt="Edit" class="w-5 h-5 inline mb-2">
+                        </a>
                         <button type="button" class="text-red-500 hover:underline delete-book-btn"
                             data-book-id="{{ $book->id }}">
                             <img src="{{ asset('images/remove.png') }}" alt="Delete" class="w-5 h-5 inline">
                         </button>
+                        @else
+                        <!-- Botão de requisição para usuários normais -->
+                        @if($book->requisitions->isEmpty() && $userActiveRequisitionsCount < 3)
+                            <form action="{{ route('requisitions.create', $book->id) }}" method="get" class="inline-block ">
+                                @csrf
+                                <button type="submit" class="bg-blue-600 text-white px-1 py-1 rounded hover:bg-blue-600">
+                                    Requisition
+                                </button>
+                            </form>
+                            @else
+                            <span class="text-gray-400">Not available</span>
+                            @endif
+                            @endif
                     </td>
+
                 </tr>
                 @empty
                 <tr>
@@ -240,7 +261,8 @@
             <h3 class="font-bold text-lg mb-4">Confirm</h3>
             <p class="py-4">Do you really want to delete this book?</p>
             <div class="flex justify-end gap-3 mt-4">
-                <button id="btnCancel" type="button" class="bg-red-600 hover:bg-red-700 text-white  py-2 px-4 rounded">No</button>
+                <button id="btnCancel" type="button"
+                    class="bg-red-600 hover:bg-red-700 text-white  py-2 px-4 rounded">No</button>
                 <form id="delete-form" method="POST" action="">
                     @csrf
                     @method('DELETE')

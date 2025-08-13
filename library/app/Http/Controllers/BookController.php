@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Author;
 use App\Models\Publisher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -14,8 +15,24 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::with(['authors', 'publisher'])->orderBy('name', 'asc')->simplePaginate(10);
-        return view('books.index', ['books' => $books]);
+
+        $books = Book::with([
+            'authors',
+            'publisher',
+            'requisitions' => function ($query) {
+                $query->whereNull('actual_return_date'); // só requisicoes ativas
+            }
+        ])->orderBy('name', 'asc')->simplePaginate(10);
+        $userActiveRequisitionsCount = 0;
+        if (Auth::check()) {
+            $userActiveRequisitionsCount = Auth::user()->requisitions()->whereNull('actual_return_date')->count();
+        }
+
+
+        return view('books.index', [
+            'books' => $books,
+            'userActiveRequisitionsCount' => $userActiveRequisitionsCount
+        ]);
     }
 
     /**
@@ -80,7 +97,13 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        return view('books.show', ['book' => $book]);
+        $requisitions = $book->requisitions()
+            ->with('user') // caso queira mostrar quem requisitou
+            ->orderByRaw('actual_return_date IS NULL DESC') // Ativas primeiro
+            ->orderBy('actual_return_date', 'asc')        // Passadas em ordem de devolução
+            ->get();
+
+        return view('books.show', compact('book', 'requisitions'));
     }
 
     /**

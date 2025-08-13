@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-100">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Library') }}</title>
+
+    <!-- Styles -->
     @vite(['resources/css/app.css'])
     @livewireStyles
+
+
 </head>
 
 <body class="h-full">
@@ -46,7 +52,7 @@
                                             <button
                                                 class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
                                                 <img class="size-8 rounded-full object-cover"
-                                                    src="{{ Auth::user()->getFreshProfilePhotoUrl() }}"
+                                                    src="{{ Auth::user()->profile_photo_url }}"
                                                     alt="{{ Auth::user()->name }}" />
                                             </button>
                                             @else
@@ -142,8 +148,10 @@
     @if (Route::has('login'))
     <div class="h-14.5 hidden lg:block"></div>
     @endif
+
+    @stack('modals')
+
     @livewireScripts
-    <script src="{{ asset('js/profile-refresh.js') }}"></script>
 
 </body>
 

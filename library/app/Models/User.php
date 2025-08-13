@@ -88,25 +88,6 @@ class User extends Authenticatable
         return $this->hasMany(Requisition::class);
     }
 
-    /**
-     * Get a fresh profile photo URL (not cached)
-     * This method rebuilds the URL directly to avoid any caching issues
-     */
-    public function getFreshProfilePhotoUrl()
-    {
-        if ($this->profile_photo_path) {
-            // Construir a URL manualmente sem usar o método url()
-            $url = '/storage/' . $this->profile_photo_path;
+   
 
-            // Add cache-busting parameter
-            return $url . '?v=' . time() . rand(1000, 9999);
-        }
-
-        // If no custom photo, return the default avatar URL
-        $name = trim(collect(explode(' ', $this->name))->map(function ($segment) {
-            return mb_substr($segment, 0, 1);
-        })->join(' '));
-
-        return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=7F9CF5&background=EBF4FF';
-    }
 }

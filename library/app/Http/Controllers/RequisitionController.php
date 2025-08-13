@@ -3,12 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\User;
 use App\Models\Requisition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RequisitionController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Requisition::class, 'requisition');
+    }
+
+
     public function index()
     {
         $user = Auth::user();
@@ -18,21 +25,58 @@ class RequisitionController extends Controller
             $requisitions = Requisition::with('user', 'book')->latest()->paginate(15);
         } else {
             // Cidadão vê apenas as suas
-            $requisitions = Requisition::with('book')->where('user_id', $user->id)->latest()->paginate(15);
+            $requisitions = Requisition::with('book')->where('user_id', $user->id)->orderByRaw('actual_return_date IS NULL DESC') // Ativas primeiro
+                ->orderBy('actual_return_date', 'asc')->paginate(15);
         }
 
-        return view('requisitions.index', compact('requisitions'));
+        $activeUserRequestsCount = Requisition::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->count();
+
+        return view('requisitions.index', compact('requisitions', 'activeUserRequestsCount'));
     }
 
 
     public function create()
     {
+        $user = Auth::user();
+
+        // Se o usuário não for admin, verificar se já tem 3 requisições ativas
+        if (!$user->isAdmin()) {
+            $activeRequestsCount = Requisition::where('user_id', $user->id)
+                ->where('status', 'active')
+                ->count();
+
+            if ($activeRequestsCount >= 3) {
+                return redirect()->route('requisitions.index')
+                    ->with('error', 'You have reached the maximum number of requisitions.');
+            }
+        }
+
         // Listar só livros disponíveis para requisição (sem requisição ativa)
         $booksAvailable = Book::whereDoesntHave('requisitions', function ($query) {
             $query->where('status', 'active');
         })->get();
 
-        return view('requisitions.create', compact('booksAvailable'));
+        // Se for admin, buscar a lista de usuários cidadãos para o select
+        $users = [];
+        if (Auth::user()->isAdmin()) {
+            // Correção da consulta para evitar o erro HAVING em non-aggregate
+            $userIds = Requisition::where('status', 'active')
+                ->whereNull('actual_return_date')
+                ->select('user_id')
+                ->groupBy('user_id')
+                ->havingRaw('COUNT(*) >= 3')
+                ->pluck('user_id')
+                ->toArray();
+
+            $users = User::where('role', 'citizen')
+                ->whereNotIn('id', $userIds)
+                ->orderBy('name')
+                ->get();
+        }
+
+        return view('requisitions.create', compact('booksAvailable', 'users'));
     }
 
 
@@ -40,31 +84,43 @@ class RequisitionController extends Controller
     {
         $user = Auth::user();
 
-        $request->validate([
+        $rules = [
             'book_id' => 'required|exists:books,id',
-        ]);
+            'citizen_photo' => 'required|image|mimes:jpg,png|max:2048',
+        ];
+
+        if ($user->isAdmin()) {
+            // admin pode criar para outro user
+            $rules['user_id'] = 'required|exists:users,id';
+        }
+
+        $validated = $request->validate($rules);
 
         // Verificar se o livro está disponível (não tem requisição ativa)
-        $activeRequest = Requisition::where('book_id', $request->book_id)
+        $activeRequest = Requisition::where('book_id', $validated['book_id'])
             ->where('status', 'active')
             ->exists();
 
         if ($activeRequest) {
             return back()->withErrors(['book_id' => 'Este livro já está requisitado no momento.'])->withInput();
         }
+        // Definir qual usuário será o dono da requisição
+        $userId = $user->isAdmin() ? $validated['user_id'] : $user->id;
 
         // Verificar limite de 3 livros ativos para o cidadão
-        $activeUserRequestsCount = Requisition::where('user_id', $user->id)
+        $activeUserRequestsCount = Requisition::where('user_id', $userId)
             ->where('status', 'active')
             ->count();
 
         if ($activeUserRequestsCount >= 3) {
             return back()->withErrors(['limit' => 'Você já tem 3 livros requisitados em simultâneo.'])->withInput();
         }
+        $path = $request->file('citizen_photo')->store('requisitions/photos', 'public');
 
         Requisition::create([
-            'user_id' => $user->id,
+            'user_id' => $userId,
             'book_id' => $request->book_id,
+            'citizen_photo' => $path,
             'start_date' => now(),
             'end_date' => now()->addDays(5),
             'status' => 'active',
@@ -112,7 +168,7 @@ class RequisitionController extends Controller
 
         $requisition->save();
 
-        return redirect()->route('requisitions.show', $requisition->id)
+        return redirect()->route('requisitions.index', $requisition->id)
             ->with('success', 'Requisição atualizada com sucesso.');
     }
 }
