@@ -22,7 +22,7 @@
                             @foreach($booksAvailable as $book)
                                 <option value="{{ $book->id }}" {{ old('book_id') == $book->id ? 'selected' : '' }}>
                                     {{ $book->name }} — {{ $book->authors->pluck('name')->join(', ') }}
-                                </option>
+                                </option>       
                             @endforeach
                         </select>
                         @error('book_id') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
@@ -35,7 +35,7 @@
                             <select id="user_id" name="user_id"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 @error('user_id') border-red-500 @enderror"
                                     required>
-                                <option value="">Select a citizen</option>
+                                <option value="">Select a user</option>
                                 @foreach($users as $u)
                                     <option value="{{ $u->id }}" {{ old('user_id') == $u->id ? 'selected' : '' }}>
                                         {{ $u->name }} ({{ $u->email }})

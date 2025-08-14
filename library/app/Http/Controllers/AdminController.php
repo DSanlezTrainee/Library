@@ -39,7 +39,7 @@ class AdminController extends Controller
 
         User::create([
             'name' => $request->name,
-            'email' => $request->email->unique(),
+            'email' => $request->email,
             'password' => bcrypt($request->password),
             'role' => 'admin',
         ]);

@@ -11,6 +11,8 @@
     <!-- Styles -->
     @vite(['resources/css/app.css'])
     @livewireStyles
+    <!-- No <head> -->
+
 
 
 </head>
@@ -27,6 +29,8 @@
                                 alt="Your Company" class="size-12" />
                         </div>
                         <div>
+
+                            @auth
                             <div class="ml-10 flex items-baseline space-x-4">
                                 <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
                                 <x-nav-link href="/books" :active="request()->is('books')">Books</x-nav-link>
@@ -35,7 +39,12 @@
                                 </x-nav-link>
                                 <x-nav-link href="/requisitions" :active="request()->is('requisitions')">Requisitions
                                 </x-nav-link>
+
+                                @if(auth()->user() && auth()->user()->isAdmin())
+                                <x-nav-link href="/users" :active="request()->is('users')">Users</x-nav-link>
+                                @endif
                             </div>
+                            @endauth
                         </div>
                     </div>
                     <div>

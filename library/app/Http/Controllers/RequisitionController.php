@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\Requisition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewRequisitionUserNotification;
+use App\Mail\NewRequisitionAdminNotification;
 
 class RequisitionController extends Controller
 {
@@ -19,10 +22,17 @@ class RequisitionController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $today = now()->format('Y-m-d');
+        $thirtyDaysAgo = now()->subDays(30)->format('Y-m-d');
+
+        $activeRequisitionsCount = Requisition::where('status', 'active')->count();
+        $last30DaysRequisitionsCount = Requisition::where('start_date', '>=', $thirtyDaysAgo)->count();
+        $returnedTodayCount = Requisition::where('actual_return_date', 'like', $today . '%')->count();
 
         if ($user->isAdmin()) {
             // Admin vê todas as requisições
-            $requisitions = Requisition::with('user', 'book')->latest()->paginate(15);
+            $requisitions = Requisition::with('user', 'book')->orderByRaw('actual_return_date IS NULL DESC') // Ativas primeiro
+                ->orderBy('actual_return_date', 'asc')->paginate(15);
         } else {
             // Cidadão vê apenas as suas
             $requisitions = Requisition::with('book')->where('user_id', $user->id)->orderByRaw('actual_return_date IS NULL DESC') // Ativas primeiro
@@ -33,7 +43,13 @@ class RequisitionController extends Controller
             ->where('status', 'active')
             ->count();
 
-        return view('requisitions.index', compact('requisitions', 'activeUserRequestsCount'));
+        return view('requisitions.index', compact(
+            'requisitions',
+            'activeUserRequestsCount',
+            'activeRequisitionsCount',
+            'last30DaysRequisitionsCount',
+            'returnedTodayCount'
+        ));
     }
 
 
@@ -58,6 +74,7 @@ class RequisitionController extends Controller
             $query->where('status', 'active');
         })->get();
 
+
         // Se for admin, buscar a lista de usuários cidadãos para o select
         $users = [];
         if (Auth::user()->isAdmin()) {
@@ -70,7 +87,7 @@ class RequisitionController extends Controller
                 ->pluck('user_id')
                 ->toArray();
 
-            $users = User::where('role', 'citizen')
+            $users = User::whereIn('role', ['citizen', 'admin'])
                 ->whereNotIn('id', $userIds)
                 ->orderBy('name')
                 ->get();
@@ -117,7 +134,7 @@ class RequisitionController extends Controller
         }
         $path = $request->file('citizen_photo')->store('requisitions/photos', 'public');
 
-        Requisition::create([
+        $requisition = Requisition::create([
             'user_id' => $userId,
             'book_id' => $request->book_id,
             'citizen_photo' => $path,
@@ -125,6 +142,14 @@ class RequisitionController extends Controller
             'end_date' => now()->addDays(5),
             'status' => 'active',
         ]);
+
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new NewRequisitionAdminNotification($requisition));
+        }
+
+        Mail::to($requisition->user->email)->send(new NewRequisitionUserNotification($requisition));
 
         return redirect()->route('requisitions.index')->with('success', 'Requisição criada com sucesso!');
     }

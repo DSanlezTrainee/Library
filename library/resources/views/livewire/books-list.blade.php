@@ -225,19 +225,22 @@
                             data-book-id="{{ $book->id }}">
                             <img src="{{ asset('images/remove.png') }}" alt="Delete" class="w-5 h-5 inline">
                         </button>
-                        @else
+                        @endif
+
                         <!-- Botão de requisição para usuários normais -->
-                        @if($book->requisitions->isEmpty() && $userActiveRequisitionsCount < 3)
-                            <form action="{{ route('requisitions.create', $book->id) }}" method="get" class="inline-block ">
-                                @csrf
-                                <button type="submit" class="bg-blue-600 text-white px-1 py-1 rounded hover:bg-blue-600">
-                                    Requisition
-                                </button>
+                        @if($book->requisitions->isEmpty() && $userActiveRequisitionsCount < 3) <form
+                            action="{{ route('requisitions.create', $book->id) }}" method="get" class="inline-block ">
+                            @csrf
+                            <button type="submit" class="bg-blue-600 text-white px-1 py-1 rounded hover:bg-blue-600">
+                                Requisition
+                            </button>
                             </form>
                             @else
-                            <span class="text-gray-400">Not available</span>
-                            @endif
-                            @endif
+                            <div>
+                                <span class="text-gray-400">Not available</span>
+                                @endif
+                            </div>
+
                     </td>
 
                 </tr>

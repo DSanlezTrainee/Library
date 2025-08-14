@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\PublisherController;
@@ -12,7 +13,11 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
-
+    //users
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+    //books 
+    Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/books', [BookController::class, 'store'])->name('books.store');
     Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
     Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
@@ -28,7 +33,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 });
 
 // Public routes
-    Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
+
 Route::middleware(['auth'])->group(function () {
 
     // Cidadãos e Admin podem acessar o menu requisições
@@ -46,7 +51,6 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['is_admin'])->group(function () {
         Route::get('/requisitions/{requisition}/edit', [RequisitionController::class, 'edit'])->name('requisitions.edit');
         Route::put('/requisitions/{requisition}', [RequisitionController::class, 'update'])->name('requisitions.update');
-        
     });
 });
 

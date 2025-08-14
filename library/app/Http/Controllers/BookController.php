@@ -71,7 +71,6 @@ class BookController extends Controller
             'price.numeric' => 'Please enter a valid number.',
         ]);
 
-        // Check for duplicate ISBN manually since we're using encrypted fields
         $isbnExists = Book::all()->filter(function ($book) use ($request) {
             return $book->isbn == $request->isbn;
         })->count() > 0;
@@ -86,6 +85,11 @@ class BookController extends Controller
         unset($attributes['author_ids']);
 
 
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('covers', 'public');
+            $attributes['cover_image'] = asset('storage/' . $imagePath);
+        }
+
         $book = Book::create($attributes);
 
         $book->authors()->attach($authorIds);
@@ -98,9 +102,9 @@ class BookController extends Controller
     public function show(Book $book)
     {
         $requisitions = $book->requisitions()
-            ->with('user') // caso queira mostrar quem requisitou
-            ->orderByRaw('actual_return_date IS NULL DESC') // Ativas primeiro
-            ->orderBy('actual_return_date', 'asc')        // Passadas em ordem de devolução
+            ->with('user')
+            ->orderByRaw('actual_return_date IS NULL DESC')
+            ->orderBy('actual_return_date', 'asc')
             ->get();
 
         return view('books.show', compact('book', 'requisitions'));
@@ -161,7 +165,8 @@ class BookController extends Controller
 
         // Handle image upload if provided
         if ($request->hasFile('image')) {
-            // TODO: Add image processing logic if needed
+            $imagePath = $request->file('image')->store('covers', 'public');
+            $attributes['cover_image'] = asset('storage/' . $imagePath);
         }
 
         $book->update($attributes);
