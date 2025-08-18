@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('publisher_id')->constrained()->onDelete('cascade');
             $table->text('bibliography')->nullable();
             $table->string('cover_image')->nullable();
-            $table->decimal('price', 8, 2);
+            $table->decimal('price', 8, 2)->nullable();
             $table->timestamps();
         });
     }

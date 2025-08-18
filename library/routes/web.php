@@ -5,6 +5,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\GoogleApiController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\RequisitionController;
 
@@ -53,6 +54,9 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/requisitions/{requisition}', [RequisitionController::class, 'update'])->name('requisitions.update');
     });
 });
+
+Route::get('/googlebooks/search', [GoogleApiController::class, 'search'])->name('googlebooks.search');
+Route::post('/googlebooks/import', [GoogleApiController::class, 'import'])->name('googlebooks.import');
 
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
