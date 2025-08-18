@@ -91,7 +91,7 @@
     </form>
 
     <div class="overflow-x-auto">
-        <table class="table-fixed w-full border-collapse border border-gray-300" style="table-layout: fixed;">
+        <table class="table-fixed w-full border-2 border-gray-700 rounded-lg">
             <colgroup>
                 <col style="width: 12%;">
                 <col style="width: 12%;">
@@ -104,26 +104,25 @@
                 <col style="width: 12%;">
             </colgroup>
 
-            <thead>
+            <thead class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium">
                 <tr>
-                    <th class="border border-gray-300 px-4 py-2">#</th>
-                    <th class="border border-gray-300 px-4 py-2">Book</th>
-                    <th class="border border-gray-300 px-4 py-2">User Photo</th>
-                    <th class="border border-gray-300 px-4 py-2">Citizen</th>
-                    <th class="border border-gray-300 px-4 py-2">Start Date</th>
-                    <th class="border border-gray-300 px-4 py-2">Expected Return</th>
-                    <th class="border border-gray-300 px-4 py-2">Actual Return</th>
-                    <th class="border border-gray-300 px-4 py-2">Status</th>
-                    <th class="border border-gray-300 px-4 py-2">Actions</th>
+                    <th class="px-4 py-2">#</th>
+                    <th class="px-4 py-2">Book</th>
+                    <th class="px-4 py-2">User Photo</th>
+                    <th class="px-4 py-2">Citizen</th>
+                    <th class="px-4 py-2">Start Date</th>
+                    <th class="px-4 py-2">Expected Return</th>
+                    <th class="px-4 py-2">Actual Return</th>
+                    <th class="px-4 py-2">Status</th>
+                    <th class="px-4 py-2">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($requisitions as $requisition)
-                <tr class="hover:bg-gray-50 transition-colors duration-200">
-                    <td class="border border-gray-300 px-4 py-2">{{ $requisition->sequential_number }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ $requisition->book->name ?? 'N/A' }}</td>
-
-                    <td class="border border-gray-300 px-4 py-2 flex justify-center">
+                <tr class="hover:bg-gray-100 transition-colors duration-200 text-center">
+                    <td class="px-4 py-2 text-center">{{ $requisition->sequential_number }}</td>
+                    <td class="px-4 py-2">{{ $requisition->book->name ?? 'N/A' }}</td>
+                    <td class="px-4 py-2 flex justify-center">
                         @if($requisition->citizen_photo)
                         <img src="{{ Storage::url($requisition->citizen_photo) }}" alt="Citizen Photo"
                             class="w-16 h-20 object-cover rounded">
@@ -131,24 +130,24 @@
                         <span>-</span>
                         @endif
                     </td>
-
-                    <td class="border border-gray-300 px-4 py-2">{{ $requisition->user->name ?? 'N/A' }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ $requisition->start_date }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ $requisition->end_date }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ $requisition->actual_return_date ?? '-' }}</td>
-                    <td class="border border-gray-300 px-4 py-2 text-center">
+                    <td class="px-4 py-2">{{ $requisition->user->name ?? 'N/A' }}</td>
+                    <td class="px-4 py-2">{{ $requisition->start_date }}</td>
+                    <td class="px-4 py-2">{{ $requisition->end_date }}</td>
+                    <td class="px-4 py-2">{{ $requisition->actual_return_date ?? '-' }}</td>
+                    <td class="px-4 py-2 text-center">
                         <span
                             class="{{ $requisition->status === 'active' ? 'text-green-600 font-medium' : ($requisition->status === 'returned' ? 'text-red-600 font-medium' : 'text-gray-600') }} capitalize">
                             {{ $requisition->status }}
                         </span>
                     </td>
-                    <td class="border border-gray-300 px-4 py-2 text-center">
+                    <td class="px-4 py-2 text-center space-x-2">
                         @can('view', $requisition)
-                        <a href="{{ route('requisitions.show', $requisition) }}">Details</a>
+                        <a href="{{ route('requisitions.show', $requisition) }}"
+                            class="text-blue-600 hover:underline">Details</a>
                         @endcan
                         @if(auth()->user()->isAdmin())
                         <a href="{{ route('requisitions.edit', $requisition->id) }}"
-                            class="ml-2 text-blue-500 hover:underline">
+                            class="text-yellow-600 hover:underline">
                             <img src="{{ asset('images/edit.png') }}" alt="Edit" class="w-5 h-5 inline mb-1">
                         </a>
                         @endif
@@ -161,5 +160,10 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+
+
+    <div class="mt-4">
+        {{ $requisitions->links() }}
     </div>
 </x-layout>

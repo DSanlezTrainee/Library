@@ -32,11 +32,11 @@ class RequisitionController extends Controller
         if ($user->isAdmin()) {
             // Admin vê todas as requisições
             $requisitions = Requisition::with('user', 'book')->orderByRaw('actual_return_date IS NULL DESC') // Ativas primeiro
-                ->orderBy('actual_return_date', 'asc')->paginate(15);
+                ->orderBy('actual_return_date', 'asc')->paginate(10);
         } else {
             // Cidadão vê apenas as suas
             $requisitions = Requisition::with('book')->where('user_id', $user->id)->orderByRaw('actual_return_date IS NULL DESC') // Ativas primeiro
-                ->orderBy('actual_return_date', 'asc')->paginate(15);
+                ->orderBy('actual_return_date', 'asc')->paginate(10);
         }
 
         $activeUserRequestsCount = Requisition::where('user_id', $user->id)
@@ -53,7 +53,7 @@ class RequisitionController extends Controller
     }
 
 
-    public function create()
+    public function create(Request $request, $bookId = null)
     {
         $user = Auth::user();
 
@@ -74,11 +74,12 @@ class RequisitionController extends Controller
             $query->where('status', 'active');
         })->get();
 
+        $selectedBookId = $request->book_id ?? $bookId;
+
 
         // Se for admin, buscar a lista de usuários cidadãos para o select
         $users = [];
         if (Auth::user()->isAdmin()) {
-            // Correção da consulta para evitar o erro HAVING em non-aggregate
             $userIds = Requisition::where('status', 'active')
                 ->whereNull('actual_return_date')
                 ->select('user_id')
@@ -93,7 +94,7 @@ class RequisitionController extends Controller
                 ->get();
         }
 
-        return view('requisitions.create', compact('booksAvailable', 'users'));
+        return view('requisitions.create', compact('booksAvailable', 'users', 'selectedBookId'));
     }
 
 

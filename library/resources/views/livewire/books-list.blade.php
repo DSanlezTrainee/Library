@@ -228,13 +228,11 @@
                         @endif
 
                         <!-- Botão de requisição para usuários normais -->
-                        @if($book->requisitions->isEmpty() && $userActiveRequisitionsCount < 3) <form
-                            action="{{ route('requisitions.create', $book->id) }}" method="get" class="inline-block ">
-                            @csrf
-                            <button type="submit" class="bg-blue-600 text-white px-1 py-1 rounded hover:bg-blue-600">
-                                Requisition
-                            </button>
-                            </form>
+                        @if($book->requisitions->isEmpty() && $userActiveRequisitionsCount < 3) <a
+                            href="{{ route('requisitions.create', ['book_id' => $book->id]) }}"
+                            class="bg-blue-600 text-white px-1 py-1 rounded hover:bg-blue-600 inline-block">
+                            Requisition
+                            </a>
                             @else
                             <div>
                                 <span class="text-gray-400">Not available</span>
