@@ -91,8 +91,8 @@
         </button>
     </div>
 
-    <div class="overflow-x-auto">
-        <table class="table-fixed w-full border-collapse border border-gray-300" style="table-layout: fixed;">
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <colgroup>
                 <col style="width: 20%;">
                 <col style="width: 14%;">
@@ -103,118 +103,131 @@
                 <col style="width: 13%;">
                 <col style="width: 10%;">
             </colgroup>
-            <thead>
+            <thead class="bg-gray-800 text-white  tracking-wide text-sm font-semibold">
                 <tr>
-                    <th class="border border-gray-300 px-4 py-2">
+                    <th class="px-4 py-2">
                         <button wire:click="sortBy('name')"
-                            class="flex items-center justify-between w-full hover:bg-gray-100 px-2 py-1 rounded min-h-[2rem]">
-                            <span>Name</span>
-                            <span class="ml-2 text-xs">
-                                @if($sortField === 'name')
-                                @if($sortDirection === 'asc')
-                                ↑
-                                @else
-                                ↓
-                                @endif
-                                @else
-                                ↕
-                                @endif
+                            class="flex items-center justify-between w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            <span class="flex items-center gap-3">
+                                Name
+                                <span class=" text-xs">
+                                    @if($sortField === 'name')
+                                    @if($sortDirection === 'asc')
+                                    ↑
+                                    @else
+                                    ↓
+                                    @endif
+                                    @else
+                                    ↕
+                                    @endif
+                                </span>
                             </span>
                         </button>
                     </th>
-                    <th class="border border-gray-300 px-4 py-2">
+                    <th class="px-4 py-2">
                         <button wire:click="sortBy('author')"
-                            class="flex items-center justify-between w-full hover:bg-gray-100 px-2 py-1 rounded min-h-[2rem]">
-                            <span>Author</span>
-                            <span class="ml-2 text-xs">
-                                @if($sortField === 'author')
-                                @if($sortDirection === 'asc')
-                                ↑
-                                @else
-                                ↓
-                                @endif
-                                @else
-                                ↕
-                                @endif
+                            class="flex items-center justify-between w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            <span class="flex items-center gap-3">
+                                Author
+                                <span class="ml-2 text-xs">
+                                    @if($sortField === 'author')
+                                    @if($sortDirection === 'asc')
+                                    ↑
+                                    @else
+                                    ↓
+                                    @endif
+                                    @else
+                                    ↕
+                                    @endif
+                                </span>
                             </span>
                         </button>
                     </th>
-                    <th class="border border-gray-300 px-4 py-2">
+                    <th class="px-4 py-2">
                         <button wire:click="sortBy('publisher')"
-                            class="flex items-center justify-between w-full hover:bg-gray-100 px-2 py-1 rounded min-h-[2rem]">
-                            <span>Publisher</span>
-                            <span class="ml-2 text-xs">
-                                @if($sortField === 'publisher')
-                                @if($sortDirection === 'asc')
-                                ↑
-                                @else
-                                ↓
-                                @endif
-                                @else
-                                ↕
-                                @endif
+                            class="flex items-center justify-between w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            <span class="flex items-center gap-3">
+                                Publisher
+
+                                <span class="ml-2 text-xs">
+                                    @if($sortField === 'publisher')
+                                    @if($sortDirection === 'asc')
+                                    ↑
+                                    @else
+                                    ↓
+                                    @endif
+                                    @else
+                                    ↕
+                                    @endif
+                                </span>
                             </span>
                         </button>
                     </th>
-                    <th class="border border-gray-300 px-4 py-2">
+                    <th class="px-4 py-2">
                         <button wire:click="sortBy('price')"
-                            class="flex items-center justify-between w-full hover:bg-gray-100 px-2 py-1 rounded min-h-[2rem]">
-                            <span>Price</span>
-                            <span class="ml-2 text-xs">
-                                @if($sortField === 'price')
-                                @if($sortDirection === 'asc')
-                                ↑
-                                @else
-                                ↓
-                                @endif
-                                @else
-                                ↕
-                                @endif
+                            class="flex items-center justify-between w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            <span class="flex items-center gap-3">
+                                Price
+
+                                <span class="ml-2 text-xs">
+                                    @if($sortField === 'price')
+                                    @if($sortDirection === 'asc')
+                                    ↑
+                                    @else
+                                    ↓
+                                    @endif
+                                    @else
+                                    ↕
+                                    @endif
+                                </span>
                             </span>
                         </button>
                     </th>
-                    <th class="border border-gray-300 px-4 py-2">
+                    <th class="px-4 py-2">
                         <button wire:click="sortBy('isbn')"
-                            class="flex items-center justify-between w-full hover:bg-gray-100 px-2 py-1 rounded min-h-[2rem]">
-                            <span>ISBN</span>
-                            <span class="ml-2 text-xs">
-                                @if($sortField === 'isbn')
-                                @if($sortDirection === 'asc')
-                                ↑
-                                @else
-                                ↓
-                                @endif
-                                @else
-                                ↕
-                                @endif
+                            class="flex items-center justify-between w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            <span class="flex items-center gap-3">
+                                ISBN
+
+                                <span class="ml-2 text-xs">
+                                    @if($sortField === 'isbn')
+                                    @if($sortDirection === 'asc')
+                                    ↑
+                                    @else
+                                    ↓
+                                    @endif
+                                    @else
+                                    ↕
+                                    @endif
+                                </span>
                             </span>
                         </button>
                     </th>
-                    <th class="border border-gray-300 px-4 py-2">Cover Image</th>
-                    <th class="border border-gray-300 px-4 py-2">Details</th>
-                    <th class="border border-gray-300 px-4 py-2">Actions</th>
+                    <th class=" px-4 py-2 font-bold tracking-wide text-sm">Cover Image</th>
+                    <th class=" px-4 py-2 font-bold tracking-wide text-sm">Details</th>
+                    <th class=" px-4 py-2 font-bold tracking-wide text-sm">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($books as $book)
                 <tr class="hover:bg-gray-50 transition-colors duration-200">
-                    <td class="border border-gray-300 px-4 py-2">{{ $book->name }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ $book->authors->pluck('name')->join(', ') ?: 'No
+                    <td class=" px-4 py-2">{{ $book->name }}</td>
+                    <td class=" px-4 py-2">{{ $book->authors->pluck('name')->join(', ') ?: 'No
                         Authors' }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ $book->publisher->name }}</td>
-                    <td class="border border-gray-300 px-4 py-2">
+                    <td class=" px-4 py-2">{{ $book->publisher->name }}</td>
+                    <td class=" px-4 py-2">
                         ${{ number_format($book->formatted_price, 2) }}
                     </td>
-                    <td class="border border-gray-300 px-4 py-2">{{ $book->isbn }}</td>
-                    <td class="border border-gray-300 px-4 py-2 flex justify-center">
+                    <td class=" px-4 py-2">{{ $book->isbn }}</td>
+                    <td class=" px-4 py-2 flex justify-center">
                         <img src="{{ $book->cover_image }}" alt="Cover Image" class="w-16 h-20 object-cover rounded">
                     </td>
-                    <td class="border border-gray-300 px-4 py-2 text-center">
+                    <td class=" px-4 py-2 text-center">
                         <a href="/books/{{ $book->id }}" class="text-blue-500 text-align:center hover:underline">View
                             Details</a>
                     </td>
 
-                    <td class="border border-gray-300 px-4 py-2 text-center">
+                    <td class=" px-4 py-2 text-center">
 
                         @if(auth()->user() && auth()->user()->isAdmin())
                         <!-- Botões de admin -->
@@ -228,9 +241,9 @@
                         @endif
 
                         <!-- Botão de requisição para usuários normais -->
-                        @if($book->requisitions->isEmpty() && $userActiveRequisitionsCount < 3) <a
-                            href="{{ route('requisitions.create', ['book_id' => $book->id]) }}"
-                            class="bg-blue-600 text-white px-1 py-1 rounded hover:bg-blue-600 inline-block">
+                        @if(!$book->requisitions->where('status', 'active')->count() && $userActiveRequisitionsCount <
+                            3) <a href="{{ route('requisitions.create', ['book_id' => $book->id]) }}"
+                            class="bg-blue-600 text-white px-1 py-1 rounded hover:bg-blue-700 inline-block">
                             Requisition
                             </a>
                             @else
@@ -260,6 +273,7 @@
     <div class="mt-4">
         {{ $books->links('pagination::tailwind') }}
     </div>
+
 
     <!-- Dropdown functionality is now handled by Alpine.js -->
     <!-- Replace your existing modal implementation with this: -->
