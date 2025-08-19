@@ -14,7 +14,7 @@ class GoogleApiService
         //
     }
 
-    public function searchBooks(string $query, int $maxResults = 10)
+    public function searchBooks(string $query, int $maxResults)
     {
         $response = Http::get('https://www.googleapis.com/books/v1/volumes', [
             'q' => $query,
@@ -24,7 +24,7 @@ class GoogleApiService
         if ($response->failed()) {
             return 'No books found';
         }
-        
+
         return $response->json()['items'] ?? [];
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Author;
 use App\Models\Publisher;
 use Illuminate\Http\Request;
 use App\Services\GoogleApiService;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class GoogleApiController extends Controller
 {
@@ -16,10 +17,63 @@ class GoogleApiController extends Controller
         $books = [];
 
         if ($query) {
-            $books = $googleBooks->searchBooks($query);
+            $books = $googleBooks->searchBooks($query, 40);
         }
 
-        return view('googlebooks.search', compact('books', 'query'));
+        $filtered = array_filter($books, function ($book) {
+            $volumeInfo = $book['volumeInfo'] ?? [];
+            $saleInfo = $book['saleInfo'] ?? [];
+            $title = $volumeInfo['title'] ?? null;
+            $authors = $volumeInfo['authors'] ?? null;
+            $publisher = $volumeInfo['publisher'] ?? null;
+            $thumbnail = $volumeInfo['imageLinks']['thumbnail'] ?? null;
+            $price = $saleInfo['listPrice']['amount'] ?? null;
+
+            // Extract ISBN (prefer ISBN_13, fallback to ISBN_10)
+            $isbn = null;
+            if (!empty($volumeInfo['industryIdentifiers'])) {
+                foreach ($volumeInfo['industryIdentifiers'] as $identifier) {
+                    if ($identifier['type'] === 'ISBN_13') {
+                        $isbn = $identifier['identifier'];
+                        break;
+                    }
+                }
+                if (!$isbn) {
+                    foreach ($volumeInfo['industryIdentifiers'] as $identifier) {
+                        if ($identifier['type'] === 'ISBN_10') {
+                            $isbn = $identifier['identifier'];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return !empty($isbn)
+                && !empty($title)
+                && !empty($authors)
+                && !empty($publisher)
+                && !empty($price)
+                && !empty($thumbnail);
+        });
+
+        $perPage = 10;
+        $page = request()->input('page', 1); // current page, default = 1
+        $filteredItems = collect($filtered)
+            ->sortBy('volumeInfo.title')
+            ->values();
+
+        $paginated = new LengthAwarePaginator(
+            $filteredItems->forPage($page, $perPage),
+            $filteredItems->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        return view('googlebooks.search', [
+            'books' => $paginated,
+            'query' => $query
+        ]);
     }
 
     public function import(Request $request)

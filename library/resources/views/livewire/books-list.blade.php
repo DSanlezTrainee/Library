@@ -54,7 +54,7 @@
         <div class="flex gap-2 items-center">
 
             <div x-data="{ open: false }" class="relative" id="filterDropdown">
-                <div @click="open = !open" role="button" class="btn m-1 min-w-[120px]">
+                <div @click="open = !open" role="button" class="btn m-1 min-w-[100px]">
                     {{ ucfirst($searchFieldLabel ?? 'Filters') }}
                 </div>
                 <ul x-show="open" @click.away="open = false"
@@ -73,7 +73,7 @@
             </div>
 
             <input type="text" wire:model.live="search" placeholder="Search books..."
-                class="input input-primary max-w-md" />
+                class="max-w-md border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
         </div>
         @if(auth()->user() && auth()->user()->isAdmin())
         <a href="{{ route('books.create') }}" class="btn btn-primary">
@@ -244,7 +244,14 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="text-center py-4">No books found.</td>
+                    <td colspan="8" class="text-center py-4">
+                        <div>
+                            <div>We don't have your book?</div>
+                            <div class="mt-2 flex justify-center">
+                                <a href="{{ route('googlebooks.search') }}" class="btn btn-primary">Try here</a>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
                 @endforelse
             </tbody>
