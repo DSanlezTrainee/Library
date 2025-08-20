@@ -31,7 +31,7 @@
         <div class="bg-white rounded-lg shadow p-5">
             <div class="flex justify-between">
                 <div>
-                    <h5 class="text-gray-500 font-medium">Active Requisitions</h5>
+                    <h5 class="text-gray-500 font-medium">Active Requests</h5>
                     <h2 class="text-3xl font-bold text-gray-800">{{ $activeRequisitionsCount }}</h2>
                 </div>
                 <div class="flex items-center justify-center  h-12 w-12 rounded-full">
@@ -86,12 +86,12 @@
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
-            {{ $activeUserRequestsCount >= 3 ? 'Max requisitions reached' : 'New Requisition' }}
+            {{ $activeUserRequestsCount >= 3 ? 'Max requests reached' : 'New Request' }}
         </button>
     </form>
 
-    <div class="overflow-x-auto">
-        <table class="table-fixed w-full border-2 border-gray-700 rounded-lg">
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <colgroup>
                 <col style="width: 12%;">
                 <col style="width: 12%;">
@@ -104,17 +104,17 @@
                 <col style="width: 12%;">
             </colgroup>
 
-            <thead class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium">
+            <thead class="bg-gray-900 text-white tracking-wide text-sm font-semibold">
                 <tr>
-                    <th class="px-4 py-2">#</th>
-                    <th class="px-4 py-2">Book</th>
-                    <th class="px-4 py-2">User Photo</th>
-                    <th class="px-4 py-2">Citizen</th>
-                    <th class="px-4 py-2">Start Date</th>
-                    <th class="px-4 py-2">Expected Return</th>
-                    <th class="px-4 py-2">Actual Return</th>
-                    <th class="px-4 py-2">Status</th>
-                    <th class="px-4 py-2">Actions</th>
+                    <th class="px-4 py-4 min-h-[2rem]">#</th>
+                    <th class="px-4 py-4 min-h-[2rem]">Book</th>
+                    <th class="px-4 py-4 min-h-[2rem]">User Photo</th>
+                    <th class="px-4 py-4 min-h-[2rem]">Citizen</th>
+                    <th class="px-4 py-4 min-h-[2rem]">Start Date</th>
+                    <th class="px-4 py-4 min-h-[2rem]">Expected Return</th>
+                    <th class="px-4 py-4 min-h-[2rem]">Actual Return</th>
+                    <th class="px-4 py-4 min-h-[2rem]">Status</th>
+                    <th class="px-4 py-4 min-h-[2rem]">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -127,6 +127,7 @@
                         <img src="{{ Storage::url($requisition->citizen_photo) }}" alt="Citizen Photo"
                             class="w-16 h-20 object-cover rounded">
                         @else
+
                         <span>-</span>
                         @endif
                     </td>

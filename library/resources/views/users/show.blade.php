@@ -19,7 +19,7 @@
     </div>
 
     <div class="mt-6">
-        <h3 class="text-md font-semibold mb-2">Requisition History</h3>
+        <h3 class="text-md font-semibold mb-2">Requests History</h3>
 
         @if($user->requisitions->isNotEmpty())
         <table class="w-full table-auto border border-gray-200">
@@ -30,7 +30,7 @@
                     <th class="border px-4 py-2">Status</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="text-center">
                 @foreach($user->requisitions as $requisition)
                 <tr>
                     <td class="border px-4 py-2">{{ $requisition->created_at->format('d/m/Y') }}</td>
@@ -48,7 +48,7 @@
             </tbody>
         </table>
         @else
-        <p>No requisitions found.</p>
+        <p>No requests found.</p>
         @endif
     </div>
 

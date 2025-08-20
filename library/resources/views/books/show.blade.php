@@ -30,14 +30,14 @@
                     <th class="border px-4 py-2">Status</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="text-center">
                 @foreach($book->requisitions as $requisition)
                 <tr>
                     <td class="border px-4 py-2">{{ $requisition->user->name ?? 'N/A' }}</td>
                     <td class="border px-4 py-2">{{ $requisition->created_at->format('d/m/Y') }}</td>
                     <td class="border px-4 py-2">{{ $requisition->actual_return_date ?
                         \Carbon\Carbon::parse($requisition->actual_return_date)->format('d/m/Y') : '-' }}</td>
-                    <td class="border px-4 py-2">
+                    <td class="border px-4 py-2 ">
                         @if($requisition->actual_return_date)
                         <span class="text-gray-500">Returned</span>
                         @else

@@ -13,11 +13,34 @@ class GoogleApiController extends Controller
 {
     public function search(GoogleApiService $googleBooks, Request $request)
     {
+        // Recebe os filtros do formulário
+        $filter = $request->input('filter'); // title, author, publisher, isbn
         $query = $request->input('q');
-        $books = [];
 
-        if ($query) {
-            $books = $googleBooks->searchBooks($query, 40);
+        $searchQuery = '';
+
+        if ($filter && $query) {
+            switch ($filter) {
+                case 'title':
+                    $searchQuery = 'intitle:' . $query;
+                    break;
+                case 'author':
+                    $searchQuery = 'inauthor:' . $query;
+                    break;
+                case 'publisher':
+                    $searchQuery = 'inpublisher:' . $query;
+                    break;
+                case 'isbn':
+                    $searchQuery = 'isbn:' . $query;
+                    break;
+                default:
+                    $searchQuery = $query;
+            }
+        }
+
+        $books = [];
+        if ($searchQuery) {
+            $books = $googleBooks->searchBooks($searchQuery, 40);
         }
 
         $filtered = array_filter($books, function ($book) {
@@ -72,7 +95,7 @@ class GoogleApiController extends Controller
 
         return view('googlebooks.search', [
             'books' => $paginated,
-            'query' => $query
+            'query' => $query,
         ]);
     }
 

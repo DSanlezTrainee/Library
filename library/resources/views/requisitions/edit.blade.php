@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot name="heading">
-        Edit Requisition
+        Edit Request
     </x-slot>
 
     @if (session()->has('success'))
@@ -36,7 +36,7 @@
             <div class="px-6 py-3">
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div class="border border-gray-200 rounded p-4">
-                        <h4 class="font-semibold text-lg mb-2">Requisition Details</h4>
+                        <h4 class="font-semibold text-lg mb-2">Request Details</h4>
                         <p><span class="font-medium">Book:</span> {{ $requisition->book->name }}</p>
                         <p><span class="font-medium">Citizen:</span> {{ $requisition->user->name }}</p>
                         <p><span class="font-medium">Start Date:</span> {{

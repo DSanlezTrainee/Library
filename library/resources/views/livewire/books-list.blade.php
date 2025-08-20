@@ -50,9 +50,9 @@
     </div>
     @endif
 
-    <div class="flex justify-between items-center mb-4">
-        <div class="flex gap-2 items-center">
-
+    <div class="flex items-center justify-between mb-4">
+        <!-- Left: Filters + Search -->
+        <div class="flex gap-2 items-center flex-1">
             <div x-data="{ open: false }" class="relative" id="filterDropdown">
                 <div @click="open = !open" role="button" class="btn m-1 min-w-[100px]">
                     {{ ucfirst($searchFieldLabel ?? 'Filters') }}
@@ -75,20 +75,29 @@
             <input type="text" wire:model.live="search" placeholder="Search books..."
                 class="max-w-md border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
         </div>
-        @if(auth()->user() && auth()->user()->isAdmin())
-        <a href="{{ route('books.create') }}" class="btn btn-primary">
-            Add Book
-        </a>
-        @endif
-        <button wire:click="export"
-            class="btn btn-success flex items-center gap-2 hover:bg-green-600 transition-colors duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Export to Excel
-        </button>
+
+        <!-- Center: Add Book -->
+        <div class="flex justify-center flex-1">
+            @if(auth()->user() && auth()->user()->isAdmin())
+            <a href="{{ route('books.create') }}"
+                class="bg-blue-600 text-white px-2 py-2 rounded hover:bg-blue-700 inline-block">
+                Add Book
+            </a>
+            @endif
+        </div>
+
+        <!-- Right: Export -->
+        <div class="flex justify-end flex-1">
+            <button wire:click="export"
+                class="btn btn-success flex items-center gap-2 hover:bg-green-600 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Export to Excel
+            </button>
+        </div>
     </div>
 
     <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200">
@@ -103,30 +112,29 @@
                 <col style="width: 13%;">
                 <col style="width: 10%;">
             </colgroup>
-            <thead class="bg-gray-800 text-white  tracking-wide text-sm font-semibold">
+            <thead class="bg-gray-900 text-white  tracking-wide text-sm font-semibold text-center">
                 <tr>
                     <th class="px-4 py-2">
                         <button wire:click="sortBy('name')"
-                            class="flex items-center justify-between w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
-                            <span class="flex items-center gap-3">
-                                Name
-                                <span class=" text-xs">
-                                    @if($sortField === 'name')
-                                    @if($sortDirection === 'asc')
-                                    ↑
-                                    @else
-                                    ↓
-                                    @endif
-                                    @else
-                                    ↕
-                                    @endif
-                                </span>
+                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            <span>Name</span>
+                            <span class="ml-2 text-xs">
+                                @if($sortField === 'name')
+                                @if($sortDirection === 'asc')
+                                ↑
+                                @else
+                                ↓
+                                @endif
+                                @else
+                                ↕
+                                @endif
                             </span>
+
                         </button>
                     </th>
                     <th class="px-4 py-2">
                         <button wire:click="sortBy('author')"
-                            class="flex items-center justify-between w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
                             <span class="flex items-center gap-3">
                                 Author
                                 <span class="ml-2 text-xs">
@@ -145,7 +153,7 @@
                     </th>
                     <th class="px-4 py-2">
                         <button wire:click="sortBy('publisher')"
-                            class="flex items-center justify-between w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
                             <span class="flex items-center gap-3">
                                 Publisher
 
@@ -165,7 +173,7 @@
                     </th>
                     <th class="px-4 py-2">
                         <button wire:click="sortBy('price')"
-                            class="flex items-center justify-between w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
                             <span class="flex items-center gap-3">
                                 Price
 
@@ -185,7 +193,7 @@
                     </th>
                     <th class="px-4 py-2">
                         <button wire:click="sortBy('isbn')"
-                            class="flex items-center justify-between w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
                             <span class="flex items-center gap-3">
                                 ISBN
 
@@ -210,7 +218,7 @@
             </thead>
             <tbody>
                 @forelse ($books as $book)
-                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <tr class="hover:bg-gray-100 transition-colors duration-200 text-center">
                     <td class=" px-4 py-2">{{ $book->name }}</td>
                     <td class=" px-4 py-2">{{ $book->authors->pluck('name')->join(', ') ?: 'No
                         Authors' }}</td>
@@ -244,7 +252,7 @@
                         @if(!$book->requisitions->where('status', 'active')->count() && $userActiveRequisitionsCount <
                             3) <a href="{{ route('requisitions.create', ['book_id' => $book->id]) }}"
                             class="bg-blue-600 text-white px-1 py-1 rounded hover:bg-blue-700 inline-block">
-                            Requisition
+                            Request
                             </a>
                             @else
                             <div>

@@ -1,14 +1,14 @@
 <div>
     <input type="text" wire:model.live="search" placeholder="Search publishers..."
-        class="input input-primary max-w-md mb-4" />
+        class="max-w-md border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4" />
 
-    <div class="overflow-x-auto">
-        <table class="table-auto w-full border-2 border-gray-700 rounded-lg font-sans" style="table-layout: fixed;">
-            <thead class="bg-gray-800 text-white text-left uppercase tracking-wide text-sm font-semibold">
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200">
+        <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-900 text-white  tracking-wide text-sm font-semibold text-center">
                 <tr>
-                    <th class="px-4 py-3 w-[15%]">
+                    <th class="px-4 py-2 w-[15%]">
                         <button wire:click="sortBy('name')"
-                            class="flex items-center justify-justify-start w-full hover:bg-gray-700/20 px-2 py-1 rounded min-h-[2rem] transition-colors duration-200">
+                            class="flex items-center justify-center w-full hover:bg-gray-700/20 px-2 py-1 rounded min-h-[2rem] transition-colors duration-200">
                             <span>Name</span>
                             <span class="ml-3 text-xs">
                                 @if($sortField === 'name')
@@ -17,12 +17,12 @@
                             </span>
                         </button>
                     </th>
-                    <th class="px-4 py-3 w-[20%]">Logo</th>
+                    <th class="px-4 py-2 w-[20%]">Logo</th>
                 </tr>
             </thead>
-            <tbody class="bg-white text-gray-700 text-sm">
+            <tbody>
                 @forelse ($publishers as $publisher)
-                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <tr class="hover:bg-gray-100 transition-colors duration-200 text-center">
                     <td class="px-4 py-2 border-b border-gray-300">{{ $publisher->name }}</td>
                     <td class="px-4 py-2 text-center border-b border-gray-300">
                         <img src="{{ $publisher->logo }}" alt="Publisher Logo"
