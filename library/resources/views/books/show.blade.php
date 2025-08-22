@@ -18,8 +18,24 @@
 
 
     <div class="mt-6">
+        <h3 class="text-md font-semibold mb-2">Reviews</h3>
+        @php
+        $activeReviews = $book->reviews()->where('status', 'active')->with('user')->get();
+        @endphp
+        @if($activeReviews->isNotEmpty())
+        <ul class="mb-4">
+            @foreach($activeReviews as $review)
+            <li class="border rounded p-3 mb-2">
+                <strong>{{ $review->user->name }}</strong>:
+                <span>{{ $review->text }}</span>
+            </li>
+            @endforeach
+        </ul>
+        @else
+        <p>No active reviews for this book.</p>
+        @endif
+        <hr>
         <h3 class="text-md font-semibold mb-2">Requisition History</h3>
-
         @if($book->requisitions && $book->requisitions->isNotEmpty())
         <table class="w-full table-auto border border-gray-200">
             <thead>
@@ -51,5 +67,9 @@
         @else
         <p>No requisitions found for this book.</p>
         @endif
+    </div>
+
+    <div class="mt-4">
+        {{ $requisitions->links() }}
     </div>
 </x-layout>

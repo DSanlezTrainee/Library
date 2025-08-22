@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 @forelse ($authors as $author)
-                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <tr class="hover:bg-gray-50 transition-colors duration-200 text-center">
                     <td class="border border-gray-300 px-4 py-2">{{ $author->name }}</td>
                     <td class="border border-gray-300 px-4 py-2 text-center align-middle">
                         <img src="{{ $author->photo }}" alt="Author Photo"

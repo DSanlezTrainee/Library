@@ -41,6 +41,7 @@
 
                             @if(auth()->user() && auth()->user()->isAdmin())
                             <x-nav-link href="/users" :active="request()->is('users')">Users</x-nav-link>
+                            <x-nav-link href="/reviews" :active="request()->is('reviews')">Reviews</x-nav-link>
                             @endif
                         </div>
                         @endauth

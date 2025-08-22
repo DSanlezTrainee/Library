@@ -105,9 +105,15 @@ class BookController extends Controller
             ->with('user')
             ->orderByRaw('actual_return_date IS NULL DESC')
             ->orderBy('actual_return_date', 'asc')
-            ->get();
+            ->paginate(10);
 
-        return view('books.show', compact('book', 'requisitions'));
+
+        $reviews = $book->reviews()
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+            
+        return view('books.show', compact('book', 'requisitions', 'reviews'));
     }
 
     /**

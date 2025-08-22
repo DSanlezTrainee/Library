@@ -32,11 +32,11 @@ class RequisitionController extends Controller
         if ($user->isAdmin()) {
             // Admin vê todas as requisições
             $requisitions = Requisition::with('user', 'book')->orderByRaw('actual_return_date IS NULL DESC') // Ativas primeiro
-                ->orderBy('actual_return_date', 'asc')->paginate(10);
+                ->orderBy('actual_return_date', 'desc')->paginate(10);
         } else {
             // Cidadão vê apenas as suas
             $requisitions = Requisition::with('book')->where('user_id', $user->id)->orderByRaw('actual_return_date IS NULL DESC') // Ativas primeiro
-                ->orderBy('actual_return_date', 'asc')->paginate(10);
+                ->orderBy('actual_return_date', 'desc')->paginate(10);
         }
 
         $activeUserRequestsCount = Requisition::where('user_id', $user->id)
@@ -195,6 +195,6 @@ class RequisitionController extends Controller
         $requisition->save();
 
         return redirect()->route('requisitions.index', $requisition->id)
-            ->with('success', 'Requisição atualizada com sucesso.');
+            ->with('success', 'Request updated successfully.');
     }
 }

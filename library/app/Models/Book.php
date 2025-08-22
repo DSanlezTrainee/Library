@@ -27,11 +27,11 @@ class Book extends Model
     protected function casts(): array
     {
         return [
-            'isbn' => Encrypted::class,       
-            'name' => Encrypted::class,        
-            'bibliography' => Encrypted::class, 
-            'cover_image' => Encrypted::class, 
-            'price' => Encrypted::class,      
+            'isbn' => Encrypted::class,
+            'name' => Encrypted::class,
+            'bibliography' => Encrypted::class,
+            'cover_image' => Encrypted::class,
+            'price' => Encrypted::class,
         ];
     }
 
@@ -56,5 +56,10 @@ class Book extends Model
     public function requisitions()
     {
         return $this->hasMany(Requisition::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

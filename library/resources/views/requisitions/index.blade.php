@@ -1,5 +1,30 @@
 <x-layout>
 
+    @if (session()->has('success'))
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
+        class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 relative">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">Success!</p>
+                <p>{{ session('success') }}</p>
+            </div>
+            <button @click="show = false" class="absolute top-0 right-0 mt-4 mr-4 text-green-500 hover:text-green-700">
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </div>
+    @endif
+
     @if (session()->has('error'))
     <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
         class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 relative">

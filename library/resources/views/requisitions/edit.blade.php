@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot name="heading">
-        Edit Request
+        Update Request
     </x-slot>
 
     @if (session()->has('success'))
@@ -37,15 +37,15 @@
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div class="border border-gray-200 rounded p-4">
                         <h4 class="font-semibold text-lg mb-2">Request Details</h4>
-                        <p><span class="font-medium">Book:</span> {{ $requisition->book->name }}</p>
-                        <p><span class="font-medium">Citizen:</span> {{ $requisition->user->name }}</p>
-                        <p><span class="font-medium">Start Date:</span> {{
+                        <p><span class="font-medium"><strong>Book:</strong></span> {{ $requisition->book->name }}</p>
+                        <p><span class="font-medium"><strong>Citizen:</strong></span> {{ $requisition->user->name }}</p>
+                        <p><span class="font-medium"><strong>Start Date:</strong></span> {{
                             \Carbon\Carbon::parse($requisition->start_date)->format('d/m/Y') }}</p>
-                        <p><span class="font-medium">Expected Return:</span> {{
+                        <p><span class="font-medium"><strong>Expected Return:</strong></span> {{
                             \Carbon\Carbon::parse($requisition->end_date)->format('d/m/Y') }}</p>
-                        <p><span class="font-medium">Status:</span>
+                        <p><span class="font-medium"><strong>Status:</strong></span>
                             <span
-                                class="inline-block py-1 px-2 rounded {{ $requisition->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                class="inline-block py-1 px-2 rounded {{ $requisition->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700' }}">
                                 {{ ucfirst($requisition->status) }}
                             </span>
                         </p>

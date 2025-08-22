@@ -98,8 +98,7 @@
             @endif
 
             <p style="margin-top: 20px;">
-                You can view this requisition in the <a href="{{ route('requisitions.show', $requisition) }}">library
-                    management system</a>.
+                View requisition details <a href="{{ route('requisitions.show', $requisition) }}">here</a>.
             </p>
         </div>
         <div class="footer">
