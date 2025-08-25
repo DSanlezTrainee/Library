@@ -12,6 +12,7 @@ class Review extends Model
         'text',
         'status', // 'suspended', 'active', 'rejected'
         'justification',
+        'rating',
     ];
 
     public function user()

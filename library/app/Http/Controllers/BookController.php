@@ -105,15 +105,23 @@ class BookController extends Controller
             ->with('user')
             ->orderByRaw('actual_return_date IS NULL DESC')
             ->orderBy('actual_return_date', 'asc')
-            ->paginate(10);
+            ->paginate(1);
 
+        // Obter todos os reviews ativos para cálculo do rating
+        $allActiveReviews = $book->reviews()
+            ->where('status', 'active')
+            ->get();
+        $averageRating = $allActiveReviews->avg('rating');
+        $reviewsCount = $allActiveReviews->count();
 
-        $reviews = $book->reviews()
+        // Paginação dos reviews ativos para exibição
+        $activeReviews = $book->reviews()
+            ->where('status', 'active')
             ->with('user')
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
-            
-        return view('books.show', compact('book', 'requisitions', 'reviews'));
+            ->paginate(1);
+
+        return view('books.show', compact('book', 'requisitions', 'activeReviews', 'averageRating', 'reviewsCount'));
     }
 
     /**

@@ -5,3 +5,16 @@
 [x-cloak] {
     display: none;
 }
+
+.star {
+    color: #fff !important;
+    -webkit-text-stroke: 0.5px #ffd700 !important;
+    font-size: 1.5rem !important;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star.selected {
+    color: #ffd700 !important;
+    -webkit-text-stroke: 1px #ffd700 !important;
+}

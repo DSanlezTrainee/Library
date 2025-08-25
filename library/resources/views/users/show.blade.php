@@ -22,31 +22,33 @@
         <h3 class="text-md font-semibold mb-2">Requests History</h3>
 
         @if($user->requisitions->isNotEmpty())
-        <table class="w-full table-auto border border-gray-200">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="border px-4 py-2">Requested At</th>
-                    <th class="border px-4 py-2">Returned At</th>
-                    <th class="border px-4 py-2">Status</th>
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                @foreach($user->requisitions as $requisition)
-                <tr>
-                    <td class="border px-4 py-2">{{ $requisition->created_at->format('d/m/Y') }}</td>
-                    <td class="border px-4 py-2">{{ $requisition->actual_return_date ?
-                        \Carbon\Carbon::parse($requisition->actual_return_date)->format('d/m/Y') : '-' }}</td>
-                    <td class="border px-4 py-2 text-center">
-                        @if($requisition->actual_return_date)
-                        <span class="text-red-600">Returned</span>
-                        @else
-                        <span class="text-green-600 font-bold">Active</span>
-                        @endif
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="overflow-x-auto bg-white dark:bg-gray-900 rounded-lg shadow border border-gray-200">
+            <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-900 text-white  tracking-wide text-sm font-semibold">
+                    <tr>
+                        <th class="px-4 py-4 min-h-[2rem]">Requested At</th>
+                        <th class="px-4 py-4 min-h-[2rem]">Returned At</th>
+                        <th class="px-4 py-4 min-h-[2rem]">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    @foreach($user->requisitions as $requisition)
+                    <tr>
+                        <td class="px-4 py-2">{{ $requisition->created_at->format('d/m/Y') }}</td>
+                        <td class="px-4 py-2">{{ $requisition->actual_return_date ?
+                            \Carbon\Carbon::parse($requisition->actual_return_date)->format('d/m/Y') : '-' }}</td>
+                        <td class="px-4 py-2 text-center">
+                            @if($requisition->actual_return_date)
+                            <span class="bg-red-100 text-red-600">Returned</span>
+                            @else
+                            <span class="bg-green-100 text-green-600 font-bold">Active</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
         @else
         <p>No requests found.</p>
         @endif

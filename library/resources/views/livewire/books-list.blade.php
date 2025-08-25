@@ -114,9 +114,9 @@
             </colgroup>
             <thead class="bg-gray-900 text-white  tracking-wide text-sm font-semibold text-center">
                 <tr>
-                    <th class="px-4 py-2">
+                    <th class="px-4 py-4 min-h-[2rem]">
                         <button wire:click="sortBy('name')"
-                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 rounded">
                             <span>Name</span>
                             <span class="ml-2 text-xs">
                                 @if($sortField === 'name')
@@ -132,9 +132,9 @@
 
                         </button>
                     </th>
-                    <th class="px-4 py-2">
+                    <th class="px-4 py-4 min-h-[2rem]">
                         <button wire:click="sortBy('author')"
-                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2">
                             <span class="flex items-center gap-3">
                                 Author
                                 <span class="ml-2 text-xs">
@@ -151,9 +151,9 @@
                             </span>
                         </button>
                     </th>
-                    <th class="px-4 py-2">
+                    <th class="px-4 py-4 min-h-[2rem]">
                         <button wire:click="sortBy('publisher')"
-                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2">
                             <span class="flex items-center gap-3">
                                 Publisher
 
@@ -171,9 +171,9 @@
                             </span>
                         </button>
                     </th>
-                    <th class="px-4 py-2">
+                    <th class="px-4 py-4 min-h-[2rem]">
                         <button wire:click="sortBy('price')"
-                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 ">
                             <span class="flex items-center gap-3">
                                 Price
 
@@ -191,9 +191,9 @@
                             </span>
                         </button>
                     </th>
-                    <th class="px-4 py-2">
+                    <th class="px-4 py-4 min-h-[2rem]">
                         <button wire:click="sortBy('isbn')"
-                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2 py-1 rounded min-h-[2rem]">
+                            class="flex items-center justify-center w-full hover:bg-gray-700 px-2">
                             <span class="flex items-center gap-3">
                                 ISBN
 
@@ -211,9 +211,9 @@
                             </span>
                         </button>
                     </th>
-                    <th class=" px-4 py-2 font-bold tracking-wide text-sm">Cover Image</th>
-                    <th class=" px-4 py-2 font-bold tracking-wide text-sm">Details</th>
-                    <th class=" px-4 py-2 font-bold tracking-wide text-sm">Actions</th>
+                    <th class="px-4 py-4 min-h-[2rem]">Cover Image</th>
+                    <th class="px-4 py-4 min-h-[2rem]">Details</th>
+                    <th class="px-4 py-4 min-h-[2rem]">Actions</th>
                 </tr>
             </thead>
             <tbody>

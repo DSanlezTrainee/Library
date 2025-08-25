@@ -5,8 +5,8 @@
 
     <div class="flex justify-center items-center min-h-screen py-8">
         <div class="bg-white shadow-lg rounded-lg w-full max-w-xl">
-            <div class="bg-blue-600 text-white text-center py-3 px-6 rounded-t-lg">
-                <h3 class="text-xl font-bold">Edit Book: {{ $book->name }}</h3>
+            <div class="bg-gray-900 text-white text-center py-3 px-6 rounded-t-lg">
+                <h3 class="text-xl font-bold">{{ $book->name }}</h3>
             </div>
             <div class="px-6 py-3">
                 <form method="POST" action="{{ route('books.update', $book) }}" enctype="multipart/form-data">

@@ -6,9 +6,9 @@
         <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-900 text-white  tracking-wide text-sm font-semibold text-center">
                 <tr>
-                    <th class="px-4 py-2 w-[15%]">
+                    <th class="px-4 py-4 min-h-[2rem] w-[15%]">
                         <button wire:click="sortBy('name')"
-                            class="flex items-center justify-center w-full hover:bg-gray-700/20 px-2 py-1 rounded min-h-[2rem] transition-colors duration-200">
+                            class="flex items-center justify-center w-full hover:bg-gray-700/20 px-2 transition-colors duration-200">
                             <span>Name</span>
                             <span class="ml-3 text-xs">
                                 @if($sortField === 'name')

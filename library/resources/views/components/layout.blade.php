@@ -13,8 +13,6 @@
     @livewireStyles
     <!-- No <head> -->
 
-
-
 </head>
 
 <body class="min-h-screen flex flex-col">

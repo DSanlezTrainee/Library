@@ -33,6 +33,7 @@ class ReviewController extends Controller
     {
         $request->validate([
             'text' => 'required|string|max:1000',
+            'rating' => 'required|integer|min:1|max:5'
         ]);
 
         $review = Review::create([
@@ -40,6 +41,7 @@ class ReviewController extends Controller
             'book_id' => $bookId,
             'text' => $request->text,
             'status' => 'pending',
+            'rating' => $request->rating
         ]);
 
         // Notificar admins

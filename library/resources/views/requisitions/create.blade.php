@@ -1,12 +1,12 @@
 <x-layout>
     <x-slot name="heading">
-        New Requisition
+        New Request
     </x-slot>
 
     <div class="flex justify-center items-center  py-3">
         <div class="bg-white shadow-lg rounded-lg w-full max-w-xl">
             <div class=" text-black text-center py-3 px-6 rounded-t-lg">
-                <h3 class="text-xl font-bold">Create Requisition</h3>
+                <h3 class="text-xl font-bold">Create Request</h3>
             </div>
             <div class="px-6 py-3">
                 <form method="POST" action="{{ route('requisitions.store') }}" enctype="multipart/form-data">

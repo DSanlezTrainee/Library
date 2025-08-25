@@ -115,7 +115,7 @@
         </button>
     </form>
 
-    <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200">
+    <div class="overflow-x-auto bg-white dark:bg-gray-900 rounded-lg shadow border border-gray-200">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <colgroup>
                 <col style="width: 12%;">
